@@ -10,7 +10,17 @@ Bvdb.pm.  Module for reading and writing Backbone Variation Database files.
 
 =head1 SYNOPSIS
 
-Later
+From a script:
+    use Bvdb;
+
+    my $bvdb = bvdb->new();
+	$bvdb->begin_insert_tran(file=>'myfile.vcf', n_samples=>1);
+	
+    # Add variant information to the database.
+	$bvdb->add_variant(CHROM=>"11"", POS=>70802554, REF=>"C", ALT=>"A", allele_count=>1, tags=>"colon_cancer" );
+	$bvdb->add_variant(CHROM=>"12"", POS=>90568222, REF=>"C", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
+	$bvdb->add_variant(CHROM=>"X"", POS=>205664, REF=>"GA", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
+	$bvdb->commit_tran();
 
 =cut
 
