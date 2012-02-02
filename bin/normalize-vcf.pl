@@ -20,6 +20,7 @@ while ($line = <$vcf>) {
 	$array[4] = substr($array[4], $len);
 	print join("\t", @array);
 }
+close $vcf;
 
 sub common_prefix_length {
 	my $str1 = shift;
