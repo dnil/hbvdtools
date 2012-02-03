@@ -6,7 +6,7 @@ package Bvdb;
 
 =head1 NAME
 
-Bvdb.pm.  Module for reading and writing Backbone Variation Database files. 
+Bvdb.pm.  Module for reading and writing Background Variation Database files. 
 
 =head1 SYNOPSIS
 
