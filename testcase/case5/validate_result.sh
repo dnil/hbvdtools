@@ -1,17 +1,26 @@
 #!/bin/bash
 
-sudo rm -r ~/development/eclipse/perl/src/DB/
+scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+srcdir=~/development/eclipse/perl/src
+if [ -f $srcdir/bvd-add.pl ]; then
+	cp $srcdir/bvd-add.pl $scriptdir/../../bin/bvd-add.pl
+fi
+if [ -f $srcdir/Bvdb.pm ]; then
+	cp $srcdir/Bvdb.pm $scriptdir/../../bin/Bvdb.pm
+fi
 
-bvd-add.pl ~/development/thesis/data/case5/case5_1.vcf
-bvd-add.pl ~/development/thesis/data/case5/case5_2.vcf -T colon_cancer,lung_cancer
-bvd-add.pl ~/development/thesis/data/case5/case5_3.vcf -T colon_cancer,lung_cancer
-bvd-add.pl ~/development/thesis/data/case5/case5_4.vcf -T lung_cancer
-bvd-add.pl ~/development/thesis/data/case5/case5_5.vcf -T lung_cancer
-bvd-add.pl ~/development/thesis/data/case5/case5_6.vcf -T prostate_cancer
-bvd-add.pl ~/development/thesis/data/case5/case5_7.vcf -T prostate_cancer
-bvd-add.pl ~/development/thesis/data/case5/case5_8.vcf
+sudo rm -r $scriptdir/../../bin/DB/
 
-result=$(diff ~/development/eclipse/perl/src/DB/bvdb ~/development/thesis/data/case5/expected_result)
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_1.vcf
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_2.vcf -T colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_3.vcf -T colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_4.vcf -T lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_5.vcf -T lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_6.vcf -T prostate_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_7.vcf -T prostate_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case5_8.vcf
+
+result=$(diff $scriptdir/../../bin/DB/bvdb $scriptdir/expected_result)
 
 if [ $? -eq 0 ]; then
     echo "All case5 are correct !!! Congratz"

@@ -1,10 +1,20 @@
 #!/bin/bash
-cp ~/development/thesis/data/case3/case3_bvdb ~/development/eclipse/perl/src/DB/bvdb
-cp ~/development/thesis/data/case3/case3_bvdb_chksum ~/development/eclipse/perl/src/DB/bvdb_chksum
 
-bvd-add.pl ~/development/thesis/data/case3/case3_2.vcf
+scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+srcdir=~/development/eclipse/perl/src
+if [ -f $srcdir/bvd-add.pl ]; then
+	cp $srcdir/bvd-add.pl $scriptdir/../../bin/bvd-add.pl
+fi
+if [ -f $srcdir/Bvdb.pm ]; then
+	cp $srcdir/Bvdb.pm $scriptdir/../../bin/Bvdb.pm
+fi
 
-result=$(diff ~/development/eclipse/perl/src/DB/bvdb ~/development/thesis/data/case3/expected_result)
+cp $scriptdir/case3_bvdb $scriptdir/../../bin/DB/bvdb
+cp $scriptdir/case3_bvdb_chksum $scriptdir/../../bin/DB/bvdb_chksum
+
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_2.vcf -T Lung_Cancer
+
+result=$(diff $scriptdir/../../bin/DB/bvdb $scriptdir/expected_result)
 
 if [ $? -eq 0 ]; then
     echo "All case3 are correct !!! Congratz"

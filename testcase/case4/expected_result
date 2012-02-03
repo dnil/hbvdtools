@@ -1,5 +1,6 @@
 ##NI=6
-##ENTRIES=/home/jessada/development/thesis/data/case4/case4_1.vcf,/home/jessada/development/thesis/data/case4/case4_2.vcf,/home/jessada/development/thesis/data/case4/case4_3.vcf,/home/jessada/development/thesis/data/case4/case4_4.vcf,/home/jessada/development/thesis/data/case4/case4_5.vcf,/home/jessada/development/thesis/data/case4/case4_6.vcf
+##ENTRIES=/home/jessada/development/thesis/hbvdb/testcase/case4/case4_1.vcf,/home/jessada/development/thesis/hbvdb/testcase/case4/case4_2.vcf,/home/jessada/development/thesis/hbvdb/testcase/case4/case4_3.vcf,/home/jessada/development/thesis/hbvdb/testcase/case4/case4_4.vcf,/home/jessada/development/thesis/hbvdb/testcase/case4/case4_5.vcf,/home/jessada/development/thesis/hbvdb/testcase/case4/case4_6.vcf
+##TAGS=Colon_Cancer
 1	811510	A	C	total=2:Colon_Cancer=2
 1	811512	A	C	total=2:Colon_Cancer=2
 1	811616	A	G	total=2:Colon_Cancer=2

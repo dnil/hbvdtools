@@ -3,11 +3,7 @@
 # Author: jessada@kth.se
 #
 
-#use strict;
-#use warnings;
 use Carp;
-#use Cwd 'abs_path';
-#use File::stat;
 use Vcf;
 use Bvdb;
 
@@ -59,7 +55,7 @@ sub add_vcf_to_bvd
 
 	#Init bvdb connection
     $bvdb = Bvdb->new();
-	$bvdb->begin_insert_tran(file=>$$opts{file}, n_samples=>$n_var_samples);
+	$bvdb->begin_add_tran(file=>$$opts{file}, total_samples=>$n_var_samples, tags=>$$opts{tags});
 
 	my %fq = (
 	);
@@ -89,8 +85,7 @@ sub add_vcf_to_bvd
 		
 		for (sort keys %fq) {
 			if ($fq{$_} > 0) {
-# 				print "Insert          $$x{CHROM}\t$$x{POS}\t$$x{REF}\t$_\t$fq{$_}\n";
-				$bvdb->add_variant(CHROM=>$$x{CHROM}, POS=>$$x{POS}, REF=>$$x{REF}, ALT=>$_, allele_count=>$fq{$_}, tags=>$$opts{tags} );
+				$bvdb->add_variant(CHROM=>$$x{CHROM}, POS=>$$x{POS}, REF=>$$x{REF}, ALT=>$_, allele_count=>$fq{$_} );
 			}
 		}
 	

@@ -14,7 +14,7 @@ From a script:
     use Bvdb;
 
     my $bvdb = bvdb->new();
-	$bvdb->begin_insert_tran(file=>'myfile.vcf', n_samples=>1);
+	$bvdb->begin_add_tran(file=>'myfile.vcf', total_samples=>1);
 	
     # Add variant information to the database.
 	$bvdb->add_variant(CHROM=>"11"", POS=>70802554, REF=>"C", ALT=>"A", allele_count=>1, tags=>"colon_cancer" );
@@ -42,6 +42,7 @@ use constant TOTAL     => 'total';
 
 use constant INDIVIDUAL_COUNT => 'NI';
 use constant ENTRIES          => 'ENTRIES';
+use constant TAGS             => 'TAGS';
 
 =head2 new
 
@@ -85,24 +86,40 @@ sub warn
     warn @msg;
 }
 
-sub begin_insert_tran
+=head2 begin_add_tran
+
+    About   : Enable 'add varaint' operation.
+    Usage   : my $bvdb = Bvdb->new(); 
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon cancer,lung cancer');
+              $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
+              $bvdb->commit_tran();
+    Args    : file         .. vcf file.
+              total_samples    .. Number of individuals in vcf file.
+              tags         .. (optional) Additional information to categorize this set of variants.
+
+=cut
+
+sub begin_add_tran
 {
     my ($self, %args) = @_;
     
-    if ( !defined($args{file})) { $self->throw("Undefined value passed to begin_insert_tran(file=>undef).\n"); }
-    if ( ! -f $args{file} ) { $self->throw("invalid file passed to begin_insert_tran(file=>undef).\n"); }
+    if ( !defined($args{file})) { $self->throw("Undefined value passed to begin_add_tran(file=>undef).\n"); }
+    if ( ! -f $args{file} ) { $self->throw("invalid file passed to begin_add_tran(file=>undef).\n"); }
     if ( $self->vcf_exist(%args)) { $self->throw("Content of ".$args{file}." was already in the database.\n"); }
     
-    if ( !defined($args{n_samples}) ) { $self->throw("Undefined value passed to begin_insert_tran(n_samples=>undef).\n"); }
+    if ( !defined($args{total_samples}) ) { $self->throw("Undefined value passed to begin_add_tran(total_samples=>undef).\n"); }
 
     if ( $$self{transactions}->{active} ) { $self->throw("Currently, there are other active transactions.\n"); }
     
     #Prepare for incoming transactions
     $self->_load_header();
     
-    $$self{transactions}->{active} = 1;
-    $$self{transactions}->{vcf}->{file} = $args{file};
-    $$self{transactions}->{vcf}->{n_samples} = $args{n_samples};
+    $$self{transactions}->{active}               = 1;
+    $$self{transactions}->{vcf}->{file}          = $args{file};
+    $$self{transactions}->{vcf}->{total_samples} = $args{total_samples};
+    if ( defined$args{tags}) { 
+    	$$self{transactions}->{vcf}->{tags}      = $args{tags}; 
+    }
     
     $self->_init_tmp_db();
     
@@ -121,6 +138,7 @@ sub _load_header()
 		$$self{db_fh}                   = undef;
 	    $$self{header}->{total_samples} = 0;
 	    $$self{header}->{entries}       = [];
+	    $$self{header}->{tags}          = [];
 	}
 }
 
@@ -130,9 +148,25 @@ sub _init_tmp_db
 	
 	open $$self{tmp_db_fh}, ">", $$self{_bvdb_db_tmp_file} or die $!;
 
-	print {$$self{tmp_db_fh}} "##".INDIVIDUAL_COUNT."=".($$self{header}->{total_samples}+$$self{transactions}->{vcf}->{n_samples})."\n";
+	print {$$self{tmp_db_fh}} "##".INDIVIDUAL_COUNT."=".($$self{header}->{total_samples}+$$self{transactions}->{vcf}->{total_samples})."\n";
 	push (@{$$self{header}->{entries}}, $$self{transactions}->{vcf}->{file});
 	print {$$self{tmp_db_fh}} "##".ENTRIES."=".join(',', @{$$self{header}->{entries}})."\n";
+	if ( $$self{transactions}->{vcf}->{tags} ) {
+		my @array = split(/,/, $$self{transactions}->{vcf}->{tags});
+		foreach my $input_tag (@array) {
+			my $found = 0;
+			foreach my $db_tag (@{$$self{header}->{tags}}) {
+				if ($input_tag eq $db_tag) {
+					$found = 1;
+					last;
+				}
+			}
+			if ( !$found) {
+				push (@{$$self{header}->{tags}}, $input_tag);
+			}
+		}
+	}
+	print {$$self{tmp_db_fh}} "##".TAGS."=".join(',', @{$$self{header}->{tags}})."\n";
 }
 
 sub _parse_header
@@ -182,6 +216,8 @@ sub _parse_header_line
 		$$self{header}->{total_samples} = $value;
 	} elsif ( $key eq ENTRIES) {
 		@{$$self{header}->{entries}} = split(/,/, $value);
+	} elsif ( $key eq TAGS) {
+		@{$$self{header}->{tags}} = split(/,/, $value);
 	}
 
     return 1;
@@ -208,8 +244,8 @@ sub _read_file_content
 
     About   : Add another set of varaint information to the database.
     Usage   : my $bvdb = Bvdb->new(); 
-              $bvdb->begin_insert_tran(file=>'my.vcf',n_samples=>3);
-              $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4, tags=>'colon cancer,lung cancer');
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon cancer,lung cancer');
+              $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
               $bvdb->commit_tran();
     Args    : CHROM        .. An identifier from the reference genome.
               POS          .. The reference position, with the 1st base having position 1.
@@ -217,7 +253,6 @@ sub _read_file_content
                               Multiple bases are permitted. The value in the pos field refers to the position of the first base in the string.
               ALT          .. An alternate non-reference allele called on at least one of the samples.
               allele_count .. Number of allele count for this variant.  
-              tags         .. (optional) Additional information to categorize this variant.
 
 =cut
 
@@ -233,7 +268,6 @@ sub add_variant
     while ( ($$self{current_variant}->{key}) && 
 			($$self{current_variant}->{key} lt $args_key)
 		  ) { 
-#    	print "lt ".$$self{current_variant}->{CHROM}.":".$$self{current_variant}->{POS}.":".$$self{current_variant}->{ALT}.":".$args{CHROM}.":".$args{POS}.":".$args{ALT}."\n";
     	print {$$self{tmp_db_fh}} "$$self{current_variant}->{CHROM}\t$$self{current_variant}->{POS}\t$$self{current_variant}->{REF}\t$$self{current_variant}->{ALT}\t$$self{current_variant}->{tags}\n";
 		$$self{current_variant} = $self->_next_record();
     }
@@ -241,19 +275,18 @@ sub add_variant
     #if both key are equal
     if ( $$self{current_variant}->{key} eq $args_key) {
     	my @array = split(/:/, $$self{current_variant}->{tags});
-#    	print "eq ".$args_key.":".$args{CHROM}.":".$args{POS}.":".$args{ALT}.":@array:".$#array."\n";
     	my %hash;
     	for (my $i=0; $i<=$#array; $i++) {
     		($tags, $count) = split(/=/, $array[$i]);
-    		if (($tags eq TOTAL) || ($tags eq $args{tags})){
+    		if (($tags eq TOTAL) || ($tags eq $$self{transactions}->{vcf}->{tags})){
 	    		$hash{$tags} = $count+$args{allele_count};
     		} else {
     			$hash{$tags} = $count;
     		} 
     		push (@tags_array, "$tags=$hash{$tags}");
     	}
-    	if ((!$hash{$args{tags}}) && ($args{tags})) {
-    		push (@tags_array, "$args{tags}=$args{allele_count}");
+    	if ((!$hash{$$self{transactions}->{vcf}->{tags}}) && ($$self{transactions}->{vcf}->{tags})) {
+    		push (@tags_array, "$$self{transactions}->{vcf}->{tags}=$args{allele_count}");
     	}
     	
 	    print {$$self{tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t".join(':', @tags_array)."\n";
@@ -264,10 +297,9 @@ sub add_variant
     #Either it's the end of file or it's a brand new database or it's just because the key in database is greater than that of vcf file
     #so the variants will be directly added to database.
     push (@tags_array, TOTAL."=$args{allele_count}");
-    if ( $args{tags}) {
-	    push (@tags_array, "$args{tags}=$args{allele_count}")
+    if ( $$self{transactions}->{vcf}->{tags}) {
+	    push (@tags_array, "$$self{transactions}->{vcf}->{tags}=$args{allele_count}")
     }
-#    print "gt ".$$self{current_variant}->{key}.":".$$self{current_variant}->{CHROM}.":".$$self{current_variant}->{POS}.":".$$self{current_variant}->{ALT}.":".$args{CHROM}.":".$args{POS}.":".$args{ALT}.":@tags_array"."\n";
     print {$$self{tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t".join(':', @tags_array)."\n";
 }
 
@@ -292,7 +324,8 @@ sub _next_record
 
     About   : Save changes to database.
     Usage   : my $bvdb = Bvdb->new(); 
-              $bvdb->begin_insert_tran(file=>'my.vcf'); 
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon cancer,lung cancer');
+              $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
               $bvdb->commit_tran();
     Args    : none
 

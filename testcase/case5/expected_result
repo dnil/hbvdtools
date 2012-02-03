@@ -1,5 +1,6 @@
 ##NI=8
-##ENTRIES=/home/jessada/development/thesis/data/case5/case5_1.vcf,/home/jessada/development/thesis/data/case5/case5_2.vcf,/home/jessada/development/thesis/data/case5/case5_3.vcf,/home/jessada/development/thesis/data/case5/case5_4.vcf,/home/jessada/development/thesis/data/case5/case5_5.vcf,/home/jessada/development/thesis/data/case5/case5_6.vcf,/home/jessada/development/thesis/data/case5/case5_7.vcf,/home/jessada/development/thesis/data/case5/case5_8.vcf
+##ENTRIES=/home/jessada/development/thesis/hbvdb/testcase/case5/case5_1.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_2.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_3.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_4.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_5.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_6.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_7.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_8.vcf
+##TAGS=colon_cancer,lung_cancer,prostate_cancer
 10	800001	G	A	total=16:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
 10	800002	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
 10	800003	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
