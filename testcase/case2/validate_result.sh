@@ -9,7 +9,8 @@ if [ -f $srcdir/Bvdb.pm ]; then
 	cp $srcdir/Bvdb.pm $scriptdir/../../bin/Bvdb.pm
 fi
 
-sudo rm -r $scriptdir/../../bin/DB/
+rm $scriptdir/../../bin/DB/*
+rmdir $scriptdir/../../bin/DB/
 
 $scriptdir/../../bin/bvd-add.pl $scriptdir/case2_1.vcf -T Colon_Cancer,Lung_Cancer
 
