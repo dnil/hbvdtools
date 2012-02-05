@@ -1,3 +1,4 @@
 *~
-bin/DB/bvdb2*
-bin/
+src/
+.project
+bin/DB/
