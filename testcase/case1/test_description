@@ -1,0 +1,3 @@
+Description : To test bvd-add with real variants with random CHROM and POS from vcf file. This also test if there isn't any existing bvdb database.
+
+

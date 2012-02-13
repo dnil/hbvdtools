@@ -1,258 +1,32 @@
-##NI=8
-##ENTRIES=/home/jessada/development/thesis/hbvdb/testcase/case5/case5_1.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_2.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_3.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_4.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_5.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_6.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_7.vcf,/home/jessada/development/thesis/hbvdb/testcase/case5/case5_8.vcf
-##TAGS=colon_cancer,lung_cancer,prostate_cancer
-10	800001	G	A	total=16:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
-10	800002	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
-10	800003	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800004	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800005	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800006	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800007	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=4
-10	800008	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=4
-10	800009	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800010	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800011	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800012	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800013	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800014	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800015	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800016	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800017	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800018	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800019	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800020	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800021	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800022	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800023	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800024	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800025	G	A	total=12:colon_cancer,lung_cancer=4:prostate_cancer=4
-10	800026	G	A	total=10:colon_cancer,lung_cancer=4:prostate_cancer=4
-10	800027	G	A	total=10:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800028	G	A	total=8:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800029	G	A	total=10:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800030	G	A	total=8:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800031	G	A	total=8:colon_cancer,lung_cancer=4
-10	800032	G	A	total=6:colon_cancer,lung_cancer=4
-10	800033	G	A	total=14:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800034	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800035	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800036	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800037	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800038	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800039	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800040	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800041	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800042	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800043	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800044	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800045	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800046	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800047	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800048	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800049	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800050	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800051	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800052	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800053	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800054	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800055	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800056	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800057	G	A	total=10:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800058	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800059	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800060	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800061	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800062	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800063	G	A	total=6:colon_cancer,lung_cancer=2
-10	800064	G	A	total=4:colon_cancer,lung_cancer=2
-10	800065	G	A	total=14:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800066	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800067	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800068	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800069	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800070	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800071	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800072	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800073	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800074	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800075	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800076	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800077	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800078	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800079	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800080	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800081	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800082	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800083	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800084	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800085	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800086	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800087	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800088	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800089	G	A	total=10:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800090	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800091	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800092	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800093	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800094	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800095	G	A	total=6:colon_cancer,lung_cancer=2
-10	800096	G	A	total=4:colon_cancer,lung_cancer=2
-10	800097	G	A	total=12:lung_cancer=4:prostate_cancer=4
-10	800098	G	A	total=10:lung_cancer=4:prostate_cancer=4
-10	800099	G	A	total=10:lung_cancer=4:prostate_cancer=2
-10	800100	G	A	total=8:lung_cancer=4:prostate_cancer=2
-10	800101	G	A	total=10:lung_cancer=4:prostate_cancer=2
-10	800102	G	A	total=8:lung_cancer=4:prostate_cancer=2
-10	800103	G	A	total=8:lung_cancer=4
-10	800104	G	A	total=6:lung_cancer=4
-10	800105	G	A	total=10:lung_cancer=2:prostate_cancer=4
-10	800106	G	A	total=8:lung_cancer=2:prostate_cancer=4
-10	800107	G	A	total=8:lung_cancer=2:prostate_cancer=2
-10	800108	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800109	G	A	total=8:lung_cancer=2:prostate_cancer=2
-10	800110	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800111	G	A	total=6:lung_cancer=2
-10	800112	G	A	total=4:lung_cancer=2
-10	800113	G	A	total=10:lung_cancer=2:prostate_cancer=4
-10	800114	G	A	total=8:lung_cancer=2:prostate_cancer=4
-10	800115	G	A	total=8:lung_cancer=2:prostate_cancer=2
-10	800116	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800117	G	A	total=8:lung_cancer=2:prostate_cancer=2
-10	800118	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800119	G	A	total=6:lung_cancer=2
-10	800120	G	A	total=4:lung_cancer=2
-10	800121	G	A	total=8:prostate_cancer=4
-10	800122	G	A	total=6:prostate_cancer=4
-10	800123	G	A	total=6:prostate_cancer=2
-10	800124	G	A	total=4:prostate_cancer=2
-10	800125	G	A	total=6:prostate_cancer=2
-10	800126	G	A	total=4:prostate_cancer=2
-10	800127	G	A	total=4
-10	800128	G	A	total=2
-10	800129	G	A	total=14:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
-10	800130	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
-10	800131	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800132	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800133	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800134	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
-10	800135	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=4
-10	800136	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=4
-10	800137	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800138	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800139	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800140	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800141	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800142	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800143	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800144	G	A	total=6:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800145	G	A	total=12:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800146	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=4
-10	800147	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800148	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800149	G	A	total=10:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800150	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2:prostate_cancer=2
-10	800151	G	A	total=8:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800152	G	A	total=6:colon_cancer,lung_cancer=4:lung_cancer=2
-10	800153	G	A	total=10:colon_cancer,lung_cancer=4:prostate_cancer=4
-10	800154	G	A	total=8:colon_cancer,lung_cancer=4:prostate_cancer=4
-10	800155	G	A	total=8:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800156	G	A	total=6:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800157	G	A	total=8:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800158	G	A	total=6:colon_cancer,lung_cancer=4:prostate_cancer=2
-10	800159	G	A	total=6:colon_cancer,lung_cancer=4
-10	800160	G	A	total=4:colon_cancer,lung_cancer=4
-10	800161	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800162	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800163	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800164	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800165	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800166	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800167	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800168	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800169	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800170	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800171	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800172	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800173	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800174	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800175	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800176	G	A	total=4:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800177	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800178	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800179	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800180	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800181	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800182	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800183	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800184	G	A	total=4:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800185	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800186	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800187	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800188	G	A	total=4:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800189	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800190	G	A	total=4:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800191	G	A	total=4:colon_cancer,lung_cancer=2
-10	800192	G	A	total=2:colon_cancer,lung_cancer=2
-10	800193	G	A	total=12:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800194	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=4
-10	800195	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800196	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800197	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800198	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4:prostate_cancer=2
-10	800199	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800200	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=4
-10	800201	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800202	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800203	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800204	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800205	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800206	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800207	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800208	G	A	total=4:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800209	G	A	total=10:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800210	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=4
-10	800211	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800212	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800213	G	A	total=8:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800214	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2:prostate_cancer=2
-10	800215	G	A	total=6:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800216	G	A	total=4:colon_cancer,lung_cancer=2:lung_cancer=2
-10	800217	G	A	total=8:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800218	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=4
-10	800219	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800220	G	A	total=4:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800221	G	A	total=6:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800222	G	A	total=4:colon_cancer,lung_cancer=2:prostate_cancer=2
-10	800223	G	A	total=4:colon_cancer,lung_cancer=2
-10	800224	G	A	total=2:colon_cancer,lung_cancer=2
-10	800225	G	A	total=10:lung_cancer=4:prostate_cancer=4
-10	800226	G	A	total=8:lung_cancer=4:prostate_cancer=4
-10	800227	G	A	total=8:lung_cancer=4:prostate_cancer=2
-10	800228	G	A	total=6:lung_cancer=4:prostate_cancer=2
-10	800229	G	A	total=8:lung_cancer=4:prostate_cancer=2
-10	800230	G	A	total=6:lung_cancer=4:prostate_cancer=2
-10	800231	G	A	total=6:lung_cancer=4
-10	800232	G	A	total=4:lung_cancer=4
-10	800233	G	A	total=8:lung_cancer=2:prostate_cancer=4
-10	800234	G	A	total=6:lung_cancer=2:prostate_cancer=4
-10	800235	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800236	G	A	total=4:lung_cancer=2:prostate_cancer=2
-10	800237	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800238	G	A	total=4:lung_cancer=2:prostate_cancer=2
-10	800239	G	A	total=4:lung_cancer=2
-10	800240	G	A	total=2:lung_cancer=2
-10	800241	G	A	total=8:lung_cancer=2:prostate_cancer=4
-10	800242	G	A	total=6:lung_cancer=2:prostate_cancer=4
-10	800243	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800244	G	A	total=4:lung_cancer=2:prostate_cancer=2
-10	800245	G	A	total=6:lung_cancer=2:prostate_cancer=2
-10	800246	G	A	total=4:lung_cancer=2:prostate_cancer=2
-10	800247	G	A	total=4:lung_cancer=2
-10	800248	G	A	total=2:lung_cancer=2
-10	800249	G	A	total=6:prostate_cancer=4
-10	800250	G	A	total=4:prostate_cancer=4
-10	800251	G	A	total=4:prostate_cancer=2
-10	800252	G	A	total=2:prostate_cancer=2
-10	800253	G	A	total=4:prostate_cancer=2
-10	800254	G	A	total=2:prostate_cancer=2
-10	800255	G	A	total=2
+7	30062202	30062202	A	C	0.2
+7	30062202	30062202	A	G	0.1
+7	30062325	30062325	T	C	0.1
+7	30085766	30085766	T	G	0.3
+7	30087381	30087381	A	G	0.1
+7	30089202	30089202	C	A	0.1
+7	30100670	30100671	TT	T	0.2
+7	30129914	30129914	C	T	0.1
+7	30492237	30492237	C	T	0.2
+15	80450328	80450328	T	C	0.3
+15	80450389	80450389	G	A	0.2
+15	80452013	80452013	C	T	0.1
+15	80452075	80452075	T	C	0.3
+15	80452268	80452268	G	A	0.3
+15	80454745	80454745	T	C	0.1
+22	45203943	45203943	C	T	0.1
+22	45203993	45203993	A	G	0.1
+22	45204107	45204107	C	T	0.1
+22	45210666	45210666	G	A	0.1
+22	45218223	45218223	C	T	0.3
+22	45221423	45221423	A	T	0.4
+22	45280449	45280449	T	TTA	0.2
+X	117033025	117033025	A	G	0.1
+X	117527945	117527945	C	G	0.1
+X	117527965	117527965	C	T	0.1
+X	117527970	117527971	AT	A	0.1
+X	117528142	117528142	C	T	0.1
+X	117531099	117531099	C	A	0.1
+X	117679244	117679245	TT	T	0.2
+X	117731269	117731269	C	T	0.2
+X	117742356	117742356	C	T	0.2
+X	117744184	117744184	G	C	0.2

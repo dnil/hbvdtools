@@ -1,18 +1,16 @@
 #!/bin/bash
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-srcdir=~/development/eclipse/perl/src
-if [ -f $srcdir/bvd-add.pl ]; then
-	cp $srcdir/bvd-add.pl $scriptdir/../../bin/bvd-add.pl
-fi
-if [ -f $srcdir/Bvdb.pm ]; then
-	cp $srcdir/Bvdb.pm $scriptdir/../../bin/Bvdb.pm
-fi
 
-cp $scriptdir/case3_bvdb $scriptdir/../../bin/DB/bvdb
-cp $scriptdir/case3_bvdb_chksum $scriptdir/../../bin/DB/bvdb_chksum
+rm $scriptdir/../../bin/DB/*
+rmdir $scriptdir/../../bin/DB/
 
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_2.vcf -T Lung_Cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_1.vcf -T colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_2.vcf -T colon_cancer,lung_cancer 
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_3.vcf -T  colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_4.vcf -T colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_5.vcf -T colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case3_6.vcf -T colon_cancer,lung_cancer
 
 result=$(diff $scriptdir/../../bin/DB/bvdb $scriptdir/expected_result)
 

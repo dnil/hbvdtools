@@ -46,6 +46,8 @@ sub parse_params
 sub add_vcf_to_bvd
 {
     my ($opts) = @_;
+	
+	validate_tags();
     
     #Open vcf file
 	my $vcf = Vcf->new(file=>$$opts{file},region=>'1:1000-2000');
@@ -96,4 +98,14 @@ sub add_vcf_to_bvd
 	
 	$bvdb->commit_tran();
 	$vcf->close();
+	$bvdb->close();
+}
+
+#Assuming that tags value is stored in $$opts{tags}
+sub validate_tags
+{
+	my @array = split(/,/, $$opts{tags});
+	my %seen = ();
+	my @unique = grep { ! $seen{ $_ }++ } @array;
+	$$opts{tags} = join(',', sort @unique);
 }

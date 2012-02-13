@@ -1,23 +1,18 @@
 #!/bin/bash
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-srcdir=~/development/eclipse/perl/src
-if [ -f $srcdir/bvd-add.pl ]; then
-	cp $srcdir/bvd-add.pl $scriptdir/../../bin/bvd-add.pl
-fi
-if [ -f $srcdir/Bvdb.pm ]; then
-	cp $srcdir/Bvdb.pm $scriptdir/../../bin/Bvdb.pm
-fi
 
 rm $scriptdir/../../bin/DB/*
 rmdir $scriptdir/../../bin/DB/
 
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_1.vcf -T Colon_Cancer
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_2.vcf -T Colon_Cancer
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_3.vcf -T Colon_Cancer
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_4.vcf -T Colon_Cancer
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_5.vcf -T Colon_Cancer
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_6.vcf -T Colon_Cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_1.vcf
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_2.vcf -T colon_cancer,lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_3.vcf -T lung_cancer,colon_cancer,colon_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_4.vcf -T lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_5.vcf -T lung_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_6.vcf -T prostate_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_7.vcf -T prostate_cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case4_8.vcf
 
 result=$(diff $scriptdir/../../bin/DB/bvdb $scriptdir/expected_result)
 

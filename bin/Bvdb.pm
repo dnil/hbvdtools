@@ -90,7 +90,7 @@ sub warn
 
     About   : Enable 'add varaint' operation.
     Usage   : my $bvdb = Bvdb->new(); 
-              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon cancer,lung cancer');
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
               $bvdb->commit_tran();
     Args    : file         .. vcf file.
@@ -104,7 +104,7 @@ sub begin_add_tran
     my ($self, %args) = @_;
     
     if ( !defined($args{file})) { $self->throw("Undefined value passed to begin_add_tran(file=>undef).\n"); }
-    if ( ! -f $args{file} ) { $self->throw("invalid file passed to begin_add_tran(file=>undef).\n"); }
+    if ( ! -e $args{file} ) { $self->throw("invalid file passed to begin_add_tran(file=>undef).\n"); }
     if ( $self->vcf_exist(%args)) { $self->throw("Content of ".$args{file}." was already in the database.\n"); }
     
     if ( !defined($args{total_samples}) ) { $self->throw("Undefined value passed to begin_add_tran(total_samples=>undef).\n"); }
@@ -112,7 +112,7 @@ sub begin_add_tran
     if ( $$self{transactions}->{active} ) { $self->throw("Currently, there are other active transactions.\n"); }
     
     #Prepare for incoming transactions
-    $self->_load_header();
+    $self->load_header();
     
     $$self{transactions}->{active}               = 1;
     $$self{transactions}->{vcf}->{file}          = $args{file};
@@ -125,21 +125,6 @@ sub begin_add_tran
     
 	#Fetch the first record from the database
 	$$self{current_variant} = $self->_next_record();
-}
-
-sub _load_header()
-{
-    my ($self) = @_;
-	
-	if ( -f $$self{_bvdb_db_file}) {
-	    open $$self{db_fh}, "<", $$self{_bvdb_db_file} or die $!;
-	    $self->_parse_header();
-	} else {
-		$$self{db_fh}                   = undef;
-	    $$self{header}->{total_samples} = 0;
-	    $$self{header}->{entries}       = [];
-	    $$self{header}->{tags}          = [];
-	}
 }
 
 sub _init_tmp_db
@@ -169,24 +154,36 @@ sub _init_tmp_db
 	print {$$self{tmp_db_fh}} "##".TAGS."=".join(',', @{$$self{header}->{tags}})."\n";
 }
 
+=head2 load_header
+
+    About   : Load header information.
+    Usage   : my $bvdb = Bvdb->new(); 
+              $bvdb->load_header(); #The result is stored in in $$self{header}
+    Args    : None.
+
+=cut
+
+sub load_header()
+{
+    my ($self) = @_;
+	
+	if ( -e $$self{_bvdb_db_file}) {
+	    open $$self{db_fh}, "<", $$self{_bvdb_db_file} or die $!;
+	    $self->_parse_header();
+	} else {
+		$$self{db_fh}                   = undef;
+	    $$self{header}->{total_samples} = 0;
+	    $$self{header}->{entries}       = [];
+	    $$self{header}->{tags}          = [];
+	}
+}
+
 sub _parse_header
 {
     my ($self) = @_;
     
     # Looking for the header lines prefixed by ##
     while ($self->_next_header_line()) { ; }
-}
-
-sub _next_line
-{
-    my ($self) = @_;
-    
-    if ( @{$$self{buffer}} ) { return shift(@{$$self{buffer}}); }
-    if (!defined($$self{db_fh})) {
-    	return undef;
-    } else {
-    	return readline($$self{db_fh});
-    }
 }
 
 sub _next_header_line
@@ -202,6 +199,18 @@ sub _next_header_line
     }
 
     return $self->_parse_header_line($line);
+}
+
+sub _next_line
+{
+    my ($self) = @_;
+    
+    if ( @{$$self{buffer}} ) { return shift(@{$$self{buffer}}); }
+    if (!defined($$self{db_fh})) {
+    	return undef;
+    } else {
+    	return readline($$self{db_fh});
+    }
 }
 
 sub _parse_header_line
@@ -244,9 +253,10 @@ sub _read_file_content
 
     About   : Add another set of varaint information to the database.
     Usage   : my $bvdb = Bvdb->new(); 
-              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon cancer,lung cancer');
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
               $bvdb->commit_tran();
+              $bvdb->close();
     Args    : CHROM        .. An identifier from the reference genome.
               POS          .. The reference position, with the 1st base having position 1.
               REF          .. Reference base(s): Each base must be one of A,C,G,T,N. Bases should be in uppercase. 
@@ -324,9 +334,10 @@ sub _next_record
 
     About   : Save changes to database.
     Usage   : my $bvdb = Bvdb->new(); 
-              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon cancer,lung cancer');
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
               $bvdb->commit_tran();
+              $bvdb->close();
     Args    : none
 
 =cut
@@ -350,7 +361,7 @@ sub commit_tran
     $self->_add_chksum();
     
     #Backup the old database if it's existed
-	if ( -f $$self{_bvdb_db_file}) {
+	if ( -e $$self{_bvdb_db_file}) {
 		copy($$self{_bvdb_db_file}, $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime)) or $self->warn("Cannot backup database: $!\n");		
 	}
 
@@ -366,7 +377,7 @@ sub _add_chksum
 {
     my ($self) = @_;
     
-	if ( -f $$self{_bvdb_chksum_file}){
+	if ( -e $$self{_bvdb_chksum_file}){
 		open $chk_sum, ">>", $$self{_bvdb_chksum_file} or die $!;
 	} else {
 		open $chk_sum, ">", $$self{_bvdb_chksum_file} or die $!;
@@ -374,6 +385,83 @@ sub _add_chksum
 
 	print $chk_sum sha512_hex($self->_read_file_content(file=>$$self{transactions}->{vcf}->{file}))."\n";
 	close $chk_sum;
+}
+
+=head2 next_data_hash
+
+    About   : Retrieve next bvdb record and split it into a hash. This is the slowest way to obtain the data.
+    Usage   : my $bvdb = Bvdb->new(); 
+              $bvdb->load_header(); 
+              my $x = $bvdb->next_data_hash();
+
+              # Or having tags to be excluded
+              my $x = $vcf->next_data_hash($tags);
+
+    Args    : (Optional) tags to be excluded.
+
+=cut
+
+sub next_data_hash
+{
+    my ($self, $excluded_tags) = @_;
+    
+    my $record = $self->_next_record();
+    if ( !defined($record)) {
+    	return undef;
+    }
+
+    my @db_tags_array = split(/:/, $record->{tags});
+    foreach my $db_tags (@db_tags_array) {
+    	($key, $value) = split(/=/, $db_tags);
+    	if ($key eq TOTAL) {
+    		$record->{fq} = $value;
+    	}
+    }
+    
+    my $tag_found;
+    @excluded_tag_array = split(/,/, $excluded_tags);
+    if ( $excluded_tags) {
+    	foreach $db_tags (@db_tags_array) {
+    		($key, $value) = split(/=/, $db_tags);
+    		my @db_tag_array = split(/,/, $key);
+    		$tag_found = 0;
+    		foreach my $db_tag (@db_tag_array) {
+    			foreach my $excluded_tag (@excluded_tag_array){
+    				if ($db_tag eq $excluded_tag) {
+    					$record->{fq} -= $value;
+    					$tag_found = 1;
+    					last;
+    				}
+    			}
+    			if ($tag_found) {
+    				last;
+    			}
+    		}#end foreach my $db_tag (@db_tag_array)
+    	}#end foreach $db_tags (@db_tags_array)
+    }#end if ( @excluded_tags)
+    $record->{fq} /= ($$self{header}->{total_samples}*2);
+    return $record;
+}
+
+=head2 close
+
+    About   : Close connection.
+    Usage   : my $bvdb = Bvdb->new(); 
+              $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
+              $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
+              $bvdb->commit_tran();
+              $bvdb->close();
+    Args    : none
+
+=cut
+
+sub close
+{
+    my ($self) = @_;
+    
+	if (defined($$self{db_fh})) {
+    	close $$self{db_fh};
+	}
 }
 
 =head2 vcf_exist
@@ -391,7 +479,7 @@ sub vcf_exist
 {
     my ($self, %args) = @_;
     
-    if ( !-f $$self{_bvdb_chksum_file}) {
+    if ( !-e $$self{_bvdb_chksum_file}) {
     	return 0;
     }
     

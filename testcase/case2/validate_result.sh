@@ -1,18 +1,11 @@
 #!/bin/bash
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-srcdir=~/development/eclipse/perl/src
-if [ -f $srcdir/bvd-add.pl ]; then
-	cp $srcdir/bvd-add.pl $scriptdir/../../bin/bvd-add.pl
-fi
-if [ -f $srcdir/Bvdb.pm ]; then
-	cp $srcdir/Bvdb.pm $scriptdir/../../bin/Bvdb.pm
-fi
 
-rm $scriptdir/../../bin/DB/*
-rmdir $scriptdir/../../bin/DB/
+cp $scriptdir/case2_bvdb $scriptdir/../../bin/DB/bvdb
+cp $scriptdir/case2_bvdb_chksum $scriptdir/../../bin/DB/bvdb_chksum
 
-$scriptdir/../../bin/bvd-add.pl $scriptdir/case2_1.vcf -T Colon_Cancer,Lung_Cancer
+$scriptdir/../../bin/bvd-add.pl $scriptdir/case2_2.vcf -T lung_cancer
 
 result=$(diff $scriptdir/../../bin/DB/bvdb $scriptdir/expected_result)
 
