@@ -1,3 +1,4 @@
-Description : To test bvd-get with two tags, one tag that exist in database and another not exist.
+Module : bvd_add
+Description : To test with two tags, one tag that exist in database and another not exist.
 
 Only one case so far: lung_cancer,breast_cancer

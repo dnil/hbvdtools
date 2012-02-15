@@ -1,4 +1,5 @@
-Description : To test bvd-get with all possible combinations of normal excluded tags by using tags and variants generate from case4
+Module : bvd_get
+Description : To test with all possible combinations of normal excluded tags by using tags and variants generate from case4
 
 There are 3 tags in case4
 - colon_cancer

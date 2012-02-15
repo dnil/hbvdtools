@@ -1,1 +1,2 @@
-Description : To test bvd-add with all possible combination of tags for each variant. There are 8 vcf files for all expected combination.
+Module : bvd_add
+Description : To test with all possible combination of tags for each variant. There are 8 vcf files for all expected combination.

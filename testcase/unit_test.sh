@@ -10,4 +10,5 @@ $scriptdir/case5/validate_result.sh
 $scriptdir/case6/validate_result.sh
 $scriptdir/case7/validate_result.sh
 $scriptdir/case8/validate_result.sh
+$scriptdir/case9/validate_result.sh
 

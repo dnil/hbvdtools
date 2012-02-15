@@ -32,13 +32,16 @@ use Digest::SHA 'sha512_hex';
 use Scalar::Util qw(looks_like_number);
 use File::Copy;
 use POSIX qw( strftime );
+use Log::Log4perl; 
 
-use constant DB_DIR    => 'DB';
-use constant DB_DB     => 'bvdb';
-use constant DB_DB_TMP => 'bvdb_tmp';
-use constant DB_CHKSUM => 'bvdb_chksum';
+use constant DB_DIR     => 'DB';
+use constant DB_DB      => 'bvdb';
+use constant DB_DB_TMP  => 'bvdb_tmp';
+use constant DB_CHKSUM  => 'bvdb_chksum';
 
-use constant TOTAL     => 'total';
+use constant LOG_CONFIG => 'bvdb_log.conf';
+
+use constant TOTAL        => 'total';
 
 use constant INDIVIDUAL_COUNT => 'NI';
 use constant ENTRIES          => 'ENTRIES';
@@ -59,22 +62,39 @@ sub new
     bless $self, ref($class) || $class;
     
     #define location of the database. This can be used for future modification
-    $$self{_bvdb_dir}    = dirname(abs_path($0))."/".DB_DIR;
+    $$self{_bvdb_dir}         = dirname(abs_path($0))."/".DB_DIR;
     $$self{_bvdb_db_file}     = $$self{_bvdb_dir}."/".DB_DB;
     $$self{_bvdb_db_tmp_file} = $$self{_bvdb_dir}."/".DB_DB_TMP;
     $$self{_bvdb_chksum_file} = $$self{_bvdb_dir}."/".DB_CHKSUM;
+    
+    Log::Log4perl->init(dirname(abs_path($0))."/".LOG_CONFIG);
     
     mkdir $$self{_bvdb_dir} unless -d $$self{_bvdb_dir};
     
     #set default value
     $$self{buffer}   = [];       # buffer stores the lines in the reverse order
     
+    $self->info("Connect to database : $$self{_bvdb_db_file}.\n");
+    
     return $self;
+}
+
+sub info
+{
+    my ($self,@msg) = @_;
+    
+    my $logger = Log::Log4perl->get_logger("Bvdb");
+    
+    $logger->info( @msg );
 }
 
 sub throw
 {
     my ($self,@msg) = @_;
+    
+    my $logger = Log::Log4perl->get_logger("Bvdb");
+    
+    $logger->error( @msg );
     confess @msg,"\n";
 }
 
@@ -83,6 +103,10 @@ sub warn
     my ($self,@msg) = @_;
     if ( $$self{silent} ) { return; }
     if ( $$self{strict} ) { $self->throw(@msg); }
+
+    my $logger = Log::Log4perl->get_logger("Bvdb");
+    
+    $logger->warn( @msg );
     warn @msg;
 }
 
@@ -271,6 +295,8 @@ sub add_variant
     my ($self, %args) = @_;
     my @tags_array;
     
+    if ( !$$self{transactions}->{active} ) {$self->throw("'begin_tran' haven't been called.\n");}
+    
     my $args_key = (looks_like_number($args{CHROM}))? sprintf("%02d", $args{CHROM}):$args{CHROM};
     $args_key .= "|".sprintf("%012s",$args{POS})."|".$args{ALT};
     
@@ -361,9 +387,12 @@ sub commit_tran
     $self->_add_chksum();
     
     #Backup the old database if it's existed
+    my $backup_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
 	if ( -e $$self{_bvdb_db_file}) {
-		copy($$self{_bvdb_db_file}, $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime)) or $self->warn("Cannot backup database: $!\n");		
+		copy($$self{_bvdb_db_file}, $backup_filename) or $self->warn("Cannot backup database: $!\n");		
 	}
+	
+	$self->info("Commit change to database : $$self{_bvdb_db_file}. The backup file is : $backup_filename\n");
 
 	#Save change to the real database
    	rename($$self{_bvdb_db_tmp_file}, $$self{_bvdb_db_file}) or $self->warn("Cannot save change to database: $!\n");

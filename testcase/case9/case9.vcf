@@ -1,0 +1,83 @@
+##fileformat=VCFv4.1
+##samtoolsVersion=0.1.17 (r973:277)
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
+##INFO=<ID=DP4,Number=4,Type=Integer,Description="# high-quality ref-forward bases, ref-reverse, alt-forward and alt-reverse bases">
+##INFO=<ID=MQ,Number=1,Type=Integer,Description="Root-mean-square mapping quality of covering reads">
+##INFO=<ID=FQ,Number=1,Type=Float,Description="Phred probability of all samples being the same">
+##INFO=<ID=AF1,Number=1,Type=Float,Description="Max-likelihood estimate of the first ALT allele frequency (assuming HWE)">
+##INFO=<ID=AC1,Number=1,Type=Float,Description="Max-likelihood estimate of the first ALT allele count (no HWE assumption)">
+##INFO=<ID=G3,Number=3,Type=Float,Description="ML estimate of genotype frequencies">
+##INFO=<ID=HWE,Number=1,Type=Float,Description="Chi^2 based HWE test P-value based on G3">
+##INFO=<ID=CLR,Number=1,Type=Integer,Description="Log ratio of genotype likelihoods with and without the constraint">
+##INFO=<ID=UGT,Number=1,Type=String,Description="The most probable unconstrained genotype configuration in the trio">
+##INFO=<ID=CGT,Number=1,Type=String,Description="The most probable constrained genotype configuration in the trio">
+##INFO=<ID=PV4,Number=4,Type=Float,Description="P-values for strand bias, baseQ bias, mapQ bias and tail distance bias">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=PC2,Number=2,Type=Integer,Description="Phred probability of the nonRef allele frequency in group1 samples being larger (,smaller) than in group2.">
+##INFO=<ID=PCHI2,Number=1,Type=Float,Description="Posterior weighted chi^2 P-value for testing the association between group1 and group2 samples.">
+##INFO=<ID=QCHI2,Number=1,Type=Integer,Description="Phred scaled PCHI2.">
+##INFO=<ID=PR,Number=1,Type=Integer,Description="# permutations yielding a smaller PCHI2.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
+##FORMAT=<ID=GL,Number=3,Type=Float,Description="Likelihoods for RR,RA,AA genotypes (R=ref,A=alt)">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="# high-quality bases">
+##FORMAT=<ID=SP,Number=1,Type=Integer,Description="Phred-scaled strand bias P-value">
+##FORMAT=<ID=PL,Number=.,Type=Integer,Description="List of Phred-scaled genotype likelihoods, number of values is (#ALT+1)*(#ALT+2)/2">
+##source_20120115.1=/home/jessada/development/thesis/tools/vcftools_0.1.7/perl/vcf-merge original_data/case9_1.vcf.gz original_data/case9_2.vcf.gz original_data/case9_3.vcf.gz original_data/case9_4.vcf.gz original_data/case9_5.vcf.gz original_data/case9_6.vcf.gz
+##sourceFiles_20120115.1=0:original_data/case9_1.vcf.gz,1:original_data/case9_2.vcf.gz,2:original_data/case9_3.vcf.gz,3:original_data/case9_4.vcf.gz,4:original_data/case9_5.vcf.gz,5:original_data/case9_6.vcf.gz
+##INFO=<ID=SF,Number=.,Type=String,Description="Source File (index to sourceFiles, f when filtered)">
+##INFO=<ID=AC,Number=.,Type=Integer,Description="Allele count in genotypes">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	case1	case2	case3	case4	case5	case6
+1	811510	.	A	C	38.50	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,1,3,2;DP=14;FQ=-34;MQ=19;PV4=1,1,1,0.15;SF=5	GT:GQ:PL	.	.	.	.	.	1/1:12:70,7,0
+1	811512	.	A	C	38.50	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,1,3,2;DP=14;FQ=-34;MQ=19;PV4=1,1,1,0.15;SF=0	GT:GQ:PL	1/1:12:70,7,0	.	.	.	.	.
+1	811616	.	A	G	38.50	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,1,3,2;DP=14;FQ=-34;MQ=19;PV4=1,1,1,0.15;SF=5	GT:GQ:PL	.	.	.	.	.	1/1:12:70,7,0
+1	811630	.	G	A	47.00	.	AC1=1;AC=1;AF1=0.5003;AN=2;DP4=0,4,4,3;DP=18;FQ=4.13;MQ=23;PV4=0.19,0.18,1,1;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:32:77,0,29
+1	811716	.	A	G	4.13	.	AC1=1;AC=1;AF1=0.4998;AN=2;DP4=4,5,3,4;DP=31;FQ=6.2;MQ=22;PV4=1,0.39,0.03,0.45;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:31:32,0,89
+1	811765	.	C	T	24.00	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=2,7,2,7;DP=29;FQ=13.1;MQ=17;PV4=1,0.045,1,0.13;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:43:54,0,40
+1	866319	.	G	A	45.00	.	AC1=2;AC=6;AF1=1;AN=6;DP4=0,0,4,8;DP=18;FQ=-39;MQ=39;SF=1,2,5	GT:GQ:PL	.	1/1:21:92,12,0	1/1:21:85,12,0	.	.	1/1:15:68,22,13
+1	866511	.	CCCCTCCCTCCCTCCC	CCCCTCCCTCCCTCCCTCCC	13.90	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,3,2;DP=6;FQ=-49.5;INDEL;MQ=21;SF=3	GT:GQ:PL	.	.	.	1/1:23:54,15,0	.	.
+1	866522	.	C	CCCCC	34.70	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,3,2;DP=9;FQ=-49.5;INDEL;MQ=18;SF=1	GT:GQ:PL	.	1/1:27:75,15,0	.	.	.	.
+1	870903	.	T	C	41.50	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,0,4;DP=6;FQ=-39;MQ=35;SF=1	GT:GQ:PL	.	1/1:21:74,12,0	.	.	.	.
+1	884045	.	G	A	15.10	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=3,0,1,1;DP=6;FQ=17.6;MQ=51;PV4=0.4,1,0.00065,0.004;SF=1	GT:GQ:PL	.	0/1:47:45,0,54	.	.	.	.
+1	886788	.	G	A	50.30	.	AC1=2;AC=4;AF1=1;AN=4;DP4=0,0,7,3;DP=12;FQ=-45;MQ=38;SF=2,3	GT:GQ:PL	.	.	1/1:33:107,18,0	1/1:21:59,12,0	.	.
+1	887560	.	A	C	40.93	.	AC1=1;AC=5;AF1=0.5;AN=6;DP4=2,4,6,8;DP=33;FQ=13.2;MQ=45;PV4=0.52,0.052,0.47,1;SF=1,2,3	GT:GQ:PL	.	0/1:42:40,0,84	1/1:33:86,18,0	1/1:27:92,15,0	.	.
+1	887801	.	A	G	104.00	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,3,4;DP=8;FQ=-48;MQ=40;SF=3	GT:GQ:PL	.	.	.	1/1:39:137,21,0	.	.
+1	892745	.	G	A	117.00	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,3,4;DP=8;FQ=-48;MQ=41;SF=3	GT:GQ:PL	.	.	.	1/1:39:150,21,0	.	.
+1	897325	.	G	C	15.10	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,0,3;DP=6;FQ=-36;MQ=40;SF=4	GT:GQ:PL	.	.	.	.	1/1:14:47,9,0	.
+1	909555	.	A	G	44.30	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,3,2;DP=6;FQ=-42;MQ=35;SF=4	GT:GQ:PL	.	.	.	.	1/1:27:77,15,0	.
+1	949608	.	G	A	50.55	.	AC1=1;AC=3;AF1=0.4998;AN=4;DP4=0,3,5,3;DP=17;FQ=4.5;MQ=39;PV4=0.1,1,1,0.0034;SF=2,4	GT:GQ:PL	.	.	0/1:28:30,0,40	.	1/1:33:131,18,0	.
+1	949654	.	A	G	72.30	.	AC1=2;AC=4;AF1=1;AN=4;DP4=0,0,5,5;DP=12;FQ=-39;MQ=31;SF=2,4	GT:GQ:PL	.	.	1/1:21:91,12,0	.	1/1:33:119,18,0	.
+1	1058978	.	T	C	3.01	.	AC1=1;AC=1;AF1=0.4997;AN=2;DP4=3,2,2,0;DP=8;FQ=4.77;MQ=46;PV4=1,1,0.24,0.08;SF=4	GT:GQ:PL	.	.	.	.	0/1:28:30,0,94	.
+1	11111110	.	A	G	206.00	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,10,7;DP=18;FQ=-78;MQ=41;SF=5	GT:GQ:PL	.	.	.	.	.	1/1:99:239,51,0
+1	11111111	.	A	G	206.00	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,10,7;DP=18;FQ=-78;MQ=41;SF=0	GT:GQ:PL	1/1:99:239,51,0	.	.	.	.	.
+2	271797	.	G	A	44.47	.	AC1=2;AC=4;AF1=1;AN=6;DP4=3,4,9,4;DP=25;FQ=-48;MQ=38;PV4=1,0.021,0.023,1;SF=1,2,5	GT:GQ:PL	.	1/1:39:127,21,0	0/1:46:43,0,131	.	.	0/1:19:56,0,16
+2	272014	.	A	AA	13.61	.	AC1=2;AC=4;AF1=1;AN=4;DP4=0,0,0,6;DP=16;FQ=-43.5;INDEL;MQ=40;SF=3,4	GT:GQ:PL	.	.	.	1/1:15:93,45,36	1/1:8:48,6,0	.
+2	272203	.	C	T	120.52	.	AC1=2;AC=5;AF1=1;AN=8;DP4=3,5,14,22;DP=50;FQ=-66;MQ=42;PV4=0.17,0.2,0.00056,0.36;SF=1,2,4,5	GT:GQ:PL	.	1/1:75:235,39,0	0/1:18:79,0,15	.	0/1:24:145,0,21	0/1:95:146,0,92
+2	275224	.	T	G	3.54	.	AC1=1;AC=1;AF1=0.4998;AN=2;DP4=4,1,1,1;DP=9;FQ=5.47;MQ=50;PV4=1,0.0077,0.24,1;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:30:31,0,109
+2	276908	.	C	G	97.10	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,1,5;DP=7;FQ=-45;MQ=44;SF=1	GT:GQ:PL	.	1/1:33:130,18,0	.	.	.	.
+2	276942	.	A	G	84.00	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=2,1,1,6;DP=13;FQ=36;MQ=41;PV4=0.18,0.14,0.021,1;SF=4	GT:GQ:PL	.	.	.	.	0/1:66:114,0,63	.
+2	277003	.	A	G	54.00	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=1,1,3,1;DP=7;FQ=20.1;MQ=48;PV4=1,0.038,0.022,0.22;SF=4	GT:GQ:PL	.	.	.	.	0/1:50:84,0,47	.
+2	277535	.	A	G	12.30	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=3,0,0,2;DP=6;FQ=15.1;MQ=53;PV4=0.1,0.024,0.0025,1;SF=4	GT:GQ:PL	.	.	.	.	0/1:44:42,0,68	.
+2	319154	.	G	A	3.56	.	AC1=1;AC=1;AF1=0.503;AN=2;DP4=3,0,0,2;DP=7;FQ=-8.86;MQ=19;PV4=0.1,0.25,1,1;SF=2	GT:GQ:PL	.	.	0/1:25:31,0,19	.	.	.
+2	319176	.	ATGTGTGTG	ATGTGTGTGTG	67.00	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,2,2;DP=10;FQ=-46.5;INDEL;MQ=31;SF=5	GT:GQ:PL	.	.	.	.	.	1/1:21:107,12,0
+2	319268	.	C	T	29.00	.	AC1=1;AC=1;AF1=0.5001;AN=2;DP4=1,1,1,2;DP=6;FQ=9.51;MQ=45;PV4=1,1,0.41,0.25;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:39:59,0,36
+2	487910	.	A	G	29.10	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,1,1,2;DP=6;FQ=-32;MQ=21;PV4=1,1,1,0.33;SF=2	GT:GQ:PL	.	.	1/1:9:60,5,0	.	.	.
+2	488684	.	G	T	36.15	.	AC1=2;AC=3;AF1=1;AN=4;DP4=4,3,9,2;DP=21;FQ=-42;MQ=33;PV4=0.19,0.004,5.4e-06,1;SF=2,3	GT:GQ:PL	.	.	1/1:27:77,15,0	0/1:61:58,0,135	.	.
+2	510344	.	A	G	57.00	.	AC1=1;AC=1;AF1=0.5001;AN=2;DP4=1,1,1,3;DP=6;FQ=9.53;MQ=46;PV4=1,1,0.042,1;SF=1	GT:GQ:PL	.	0/1:39:87,0,36	.	.	.	.
+2	672976	.	A	G	129.00	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=3,0,11,1;DP=17;FQ=17.1;MQ=43;PV4=1,0.083,0.019,0.42;SF=1	GT:GQ:PL	.	0/1:47:159,0,44	.	.	.	.
+2	675831	.	G	T	68.10	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,7,0;DP=8;FQ=-48;MQ=40;SF=3	GT:GQ:PL	.	.	.	1/1:39:101,21,0	.	.
+2	856817	.	C	T	24.00	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,1,9;DP=12;FQ=-57;MQ=11;SF=3	GT:GQ:PL	.	.	.	1/1:50:57,30,0	.	.
+2	1426621	.	A	G	67.20	.	AC1=2;AC=2;AF1=1;AN=2;DP4=1,0,1,4;DP=10;FQ=-35;MQ=34;PV4=0.33,0.13,1,0.32;SF=3	GT:GQ:PL	.	.	.	1/1:14:99,8,0	.	.
+3	3137165	.	T	TT	79.18	.	AC1=1;AC=5;AF1=0.5;AN=8;DP4=4,4,10,14;DP=57;FQ=9.05;INDEL;MQ=48;PV4=1,1,0.009,1;SF=2,3,4,5	GT:GQ:PL	.	.	0/1:46:111,0,43	0/1:22:168,0,19	1/1:4:133,1,0	0/1:34:54,0,31
+3	100949842	.	G	A	213.00	.	AC1=2;AC=1;AF1=1;AN=2;DP4=0,0,23,14;DP=39;FQ=-135;MQ=41;SF=2	GT:GQ:PL	.	.	0/1:99:246,108,0	.	.	.
+3	112253207	.	A	AAAA,AAA,AA	43.29	.	AC1=1;AC=2,3,2;AF1=0.5;AN=8;DP4=4,5,19,1;DP=53;FQ=19.5;INDEL;MQ=50;PV4=0.17,1,0.026,0.0016;SF=1,2,4,5	GT:GQ:PL	.	0/2:57:82,.,.,.,.,.,0,.,.,54	1/2:5:82,40,37,60,15,57,47,0,20,41	.	3/2:57:82,.,.,.,.,.,0,.,.,54	3/1:12:119,.,.,.,.,.,7,.,.,0
+3	124482502	.	ACTTGTTGAA	A	17.80	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,0,5;DP=6;FQ=-49.5;INDEL;MQ=20;SF=3	GT:GQ:PL	.	.	.	1/1:25:58,15,0	.	.
+3	154890526	.	T	TTT,TT	20.30	.	AC1=2;AC=1,1;AF1=1;AN=2;DP4=0,0,2,1;DP=6;FQ=-40.5;INDEL;MQ=31;SF=1	GT:GQ:PL	.	1/2:10:79,26,20,58,0,55	.	.	.	.
+10	1042023	.	A	AAAC	67.60	.	AC1=2;AC=2;AF1=1;AN=2;DP4=0,0,5,4;DP=10;FQ=-52.5;INDEL;MQ=30;SF=3	GT:GQ:PL	.	.	.	1/1:33:151,61,43	.	.
+11	5142029	.	A	AA	3.25	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=0,4,0,2;DP=10;FQ=5.07;INDEL;MQ=47;PV4=1,1,0.13,1;SF=3	GT:GQ:PL	.	.	.	1/0:37:38,0,61	.	.
+11	5536537	.	A	.	194.40	.	AC1=2;AC=0;AF1=1;AN=10;DP4=0,0,74,78;DP=194;FQ=-141;MQ=39;SF=1,2,3,4,5	GT:GQ:PL	.	0/0:99:239	0/0:99:234	0/0:99:205	0/0:99:233	0/0:99:226
+22	45972610	.	G	A	19.10	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=2,3,2,1;DP=9;FQ=22;MQ=48;PV4=1,0.49,0.44,1;SF=0	GT:GQ:PL	0/1:52:49,0,75	.	.	.	.	.
+22	45972611	.	G	A	19.10	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=2,3,2,1;DP=9;FQ=22;MQ=48;PV4=1,0.49,0.44,1;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:52:49,0,75
+X	20086	.	T	C	32.00	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=4,7,3,2;DP=23;FQ=35;MQ=49;PV4=0.6,1,0.046,1;SF=0	GT:GQ:PL	0/1:65:62,0,142	.	.	.	.	.
+X	200861	.	T	C	32.00	.	AC1=1;AC=1;AF1=0.5;AN=2;DP4=4,7,3,2;DP=23;FQ=35;MQ=49;PV4=0.6,1,0.046,1;SF=5	GT:GQ:PL	.	.	.	.	.	0/1:65:62,0,142
