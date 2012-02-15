@@ -24,8 +24,9 @@ sub error
         "About: Add variant frequencies to Background Variation Database.\n",
         "Usage: bvd-add [OPTIONS] file.vcf\n",
         "Options:\n",
-        "   -h, -?, --help                          This help message.\n",
-        "   -T, --tags <string>                     Additional information to categorize variant from this vcf file, comma separated.\n",
+        "   -h, -?, --help                  This help message.\n",
+        "   -d, --database                  Specific target database.\n",
+        "   -T, --tags <string>             Additional information to categorize variant from this vcf file, comma separated.\n",
         "\n";
 }
 
@@ -36,6 +37,7 @@ sub parse_params
     while (my $arg=shift(@ARGV))
     {
         if ( $arg eq '-T' || $arg eq '--tags' ) { $$opts{tags}=shift(@ARGV); next; }
+        if ( $arg eq '-d' || $arg eq '--database' ) { $$opts{database}=shift(@ARGV); next; }
         if ( $arg eq '-?' || $arg eq '-h' || $arg eq '--help' ) { error(); }
         if ( -e $arg ) { $$opts{file}=$arg; next; }
         error("Unknown parameter or non-existent file \"$arg\". Run -? for help.\n");
@@ -56,7 +58,7 @@ sub add_vcf_to_bvd
 	my $n_var_samples = $#{$$vcf{columns}}-(FIX_COL)+1;
 
 	#Init bvdb connection
-    $bvdb = Bvdb->new();
+    $bvdb = Bvdb->new(db_dir=>$$opts{database});
 	$bvdb->begin_add_tran(file=>$$opts{file}, total_samples=>$n_var_samples, tags=>$$opts{tags});
 
 	my %fq = (

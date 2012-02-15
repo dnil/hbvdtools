@@ -32,9 +32,10 @@ use Digest::SHA 'sha512_hex';
 use Scalar::Util qw(looks_like_number);
 use File::Copy;
 use POSIX qw( strftime );
-use Log::Log4perl; 
+use Log::Log4perl qw(:easy); 
 
 use constant DB_DIR     => 'DB';
+
 use constant DB_DB      => 'bvdb';
 use constant DB_DB_TMP  => 'bvdb_tmp';
 use constant DB_CHKSUM  => 'bvdb_chksum';
@@ -51,7 +52,7 @@ use constant TAGS             => 'TAGS';
 
     About   : Creates new VCF reader/writer. 
     Usage   : my $bvdb = Bvdb->new();
-    Args    : none 
+    Args    : db_dir .. (optional) The directory where database has been stored. The default value is <script_path>/DB. 
 
 =cut
 
@@ -62,14 +63,16 @@ sub new
     bless $self, ref($class) || $class;
     
     #define location of the database. This can be used for future modification
-    $$self{_bvdb_dir}         = dirname(abs_path($0))."/".DB_DIR;
-    $$self{_bvdb_db_file}     = $$self{_bvdb_dir}."/".DB_DB;
-    $$self{_bvdb_db_tmp_file} = $$self{_bvdb_dir}."/".DB_DB_TMP;
-    $$self{_bvdb_chksum_file} = $$self{_bvdb_dir}."/".DB_CHKSUM;
+    if (!$$self{db_dir}) {
+	    $$self{db_dir}         = dirname(abs_path($0))."/".DB_DIR;
+    }
+    $$self{_bvdb_db_file}     = $$self{db_dir}."/".DB_DB;
+    $$self{_bvdb_db_tmp_file} = $$self{db_dir}."/".DB_DB_TMP;
+    $$self{_bvdb_chksum_file} = $$self{db_dir}."/".DB_CHKSUM;
     
-    Log::Log4perl->init(dirname(abs_path($0))."/".LOG_CONFIG);
+    Log::Log4perl->easy_init( { level => $DEBUG, file => ">>".dirname(abs_path($0))."/bvdb.log" } );
     
-    mkdir $$self{_bvdb_dir} unless -d $$self{_bvdb_dir};
+    mkdir $$self{db_dir} unless -d $$self{db_dir};
     
     #set default value
     $$self{buffer}   = [];       # buffer stores the lines in the reverse order
@@ -117,9 +120,9 @@ sub warn
               $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
               $bvdb->commit_tran();
-    Args    : file         .. vcf file.
-              total_samples    .. Number of individuals in vcf file.
-              tags         .. (optional) Additional information to categorize this set of variants.
+    Args    : file          .. vcf file.
+              total_samples .. Number of individuals in vcf file.
+              tags          .. (optional) Additional information to categorize this set of variants.
 
 =cut
 
@@ -158,7 +161,7 @@ sub _init_tmp_db
 	open $$self{tmp_db_fh}, ">", $$self{_bvdb_db_tmp_file} or die $!;
 
 	print {$$self{tmp_db_fh}} "##".INDIVIDUAL_COUNT."=".($$self{header}->{total_samples}+$$self{transactions}->{vcf}->{total_samples})."\n";
-	push (@{$$self{header}->{entries}}, $$self{transactions}->{vcf}->{file});
+	push (@{$$self{header}->{entries}}, basename($$self{transactions}->{vcf}->{file}));
 	print {$$self{tmp_db_fh}} "##".ENTRIES."=".join(',', @{$$self{header}->{entries}})."\n";
 	if ( $$self{transactions}->{vcf}->{tags} ) {
 		my @array = split(/,/, $$self{transactions}->{vcf}->{tags});

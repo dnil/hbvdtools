@@ -1,2 +1,0 @@
-Module : bvd_add
-Description : To test with multi column vcf file. The input variants are the same with those from case3 but, instead of in separated vcf files, variants are combined into one single multicolumn vcf file. 

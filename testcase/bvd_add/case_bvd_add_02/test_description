@@ -1,0 +1,7 @@
+Module : bvd_add
+Description : 
+1. To test bvd-add with real variants with random CHROM and POS from vcf file. 
+2. To test if it has existing bvdb database.
+3. To test if parameter '--database' is not indicated
+
+
