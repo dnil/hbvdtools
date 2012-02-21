@@ -5,7 +5,7 @@ scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cp $scriptdir/case_bvd_add_02_bvdb $scriptdir/../../../bin/DB/bvdb
 cp $scriptdir/case_bvd_add_02_bvdb_chksum $scriptdir/../../../bin/DB/bvdb_chksum
 
-$scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_02_2.vcf -T lung_cancer
+$scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_02_2.vcf
 
 result=$(diff $scriptdir/../../../bin/DB/bvdb $scriptdir/expected_result)
 

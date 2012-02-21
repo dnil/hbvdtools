@@ -1,0 +1,44 @@
+##fileformat=VCFv4.1
+##samtoolsVersion=0.1.17 (r973:277)
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
+##INFO=<ID=DP4,Number=4,Type=Integer,Description="# high-quality ref-forward bases, ref-reverse, alt-forward and alt-reverse bases">
+##INFO=<ID=MQ,Number=1,Type=Integer,Description="Root-mean-square mapping quality of covering reads">
+##INFO=<ID=FQ,Number=1,Type=Float,Description="Phred probability of all samples being the same">
+##INFO=<ID=AF1,Number=1,Type=Float,Description="Max-likelihood estimate of the first ALT allele frequency (assuming HWE)">
+##INFO=<ID=AC1,Number=1,Type=Float,Description="Max-likelihood estimate of the first ALT allele count (no HWE assumption)">
+##INFO=<ID=G3,Number=3,Type=Float,Description="ML estimate of genotype frequencies">
+##INFO=<ID=HWE,Number=1,Type=Float,Description="Chi^2 based HWE test P-value based on G3">
+##INFO=<ID=CLR,Number=1,Type=Integer,Description="Log ratio of genotype likelihoods with and without the constraint">
+##INFO=<ID=UGT,Number=1,Type=String,Description="The most probable unconstrained genotype configuration in the trio">
+##INFO=<ID=CGT,Number=1,Type=String,Description="The most probable constrained genotype configuration in the trio">
+##INFO=<ID=PV4,Number=4,Type=Float,Description="P-values for strand bias, baseQ bias, mapQ bias and tail distance bias">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
+##INFO=<ID=PC2,Number=2,Type=Integer,Description="Phred probability of the nonRef allele frequency in group1 samples being larger (,smaller) than in group2.">
+##INFO=<ID=PCHI2,Number=1,Type=Float,Description="Posterior weighted chi^2 P-value for testing the association between group1 and group2 samples.">
+##INFO=<ID=QCHI2,Number=1,Type=Integer,Description="Phred scaled PCHI2.">
+##INFO=<ID=PR,Number=1,Type=Integer,Description="# permutations yielding a smaller PCHI2.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
+##FORMAT=<ID=GL,Number=3,Type=Float,Description="Likelihoods for RR,RA,AA genotypes (R=ref,A=alt)">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="# high-quality bases">
+##FORMAT=<ID=SP,Number=1,Type=Integer,Description="Phred-scaled strand bias P-value">
+##FORMAT=<ID=PL,Number=.,Type=Integer,Description="List of Phred-scaled genotype likelihoods, number of values is (#ALT+1)*(#ALT+2)/2">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	case3
+7	30062202	.	A	G	106	.	DP=12;AF1=0.5001;AC1=1;DP4=3,0,3,4;MQ=44;FQ=8.65;PV4=0.2,1,0.033,0.1	GT:PL:GQ	0/1:136,0,35:38
+7	30085766	.	T	G	20	.	DP=19;AF1=0.5;AC1=1;DP4=2,5,1,4;MQ=48;FQ=23;PV4=1,0.088,0.0021,1	GT:PL:GQ	0/1:50,0,105:53
+7	30087381	.	A	G	105	.	DP=9;AF1=0.5939;AC1=1;DP4=1,0,6,1;MQ=43;FQ=-22;PV4=1,1,0.037,0.27	GT:PL:GQ	0/1:134,0,5:8
+7	30089202	.	C	A	40	.	DP=6;AF1=0.504;AC1=1;DP4=1,0,3,1;MQ=44;FQ=-9.5;PV4=1,0.13,0.016,0.34	GT:PL:GQ	0/1:70,0,18:21
+7	30101683	.	C	G	64	.	DP=10;AF1=0.5;AC1=1;DP4=1,3,1,4;MQ=44;FQ=58.4;PV4=1,0.33,0.062,0.24	GT:PL:GQ	0/1:94,0,86:88
+15	80450328	.	T	C	74	.	DP=19;AF1=0.5;AC1=1;DP4=1,11,1,6;MQ=50;FQ=77;PV4=1,1,0.00027,1	GT:PL:GQ	0/1:104,0,130:99
+15	80452013	.	C	T	101	.	DP=29;AF1=0.5;AC1=1;DP4=1,12,1,10;MQ=48;FQ=104;PV4=1,1,0.018,1	GT:PL:GQ	0/1:131,0,144:99
+15	80452075	.	T	C	62	.	DP=23;AF1=0.5;AC1=1;DP4=4,6,2,6;MQ=48;FQ=65;PV4=0.64,0.0035,0.011,1	GT:PL:GQ	0/1:92,0,152:95
+15	80452172	.	G	C	80	.	DP=15;AF1=0.5;AC1=1;DP4=2,4,3,4;MQ=49;FQ=79.5;PV4=1,0.086,0.02,1	GT:PL:GQ	0/1:110,0,109:99
+15	80452268	.	G	A	45	.	DP=18;AF1=0.5;AC1=1;DP4=3,8,3,2;MQ=46;FQ=48;PV4=0.3,1,0.069,0.31	GT:PL:GQ	0/1:75,0,145:78
+22	45218223	.	C	T	141	.	DP=17;AF1=1;AC1=2;DP4=0,0,10,5;MQ=41;FQ=-72	GT:PL:GQ	1/1:174,45,0:87
+22	45255460	.	G	A	25	.	DP=6;AF1=0.5;AC1=1;DP4=0,3,0,3;MQ=45;FQ=26.6;PV4=1,0.14,0.014,0.24	GT:PL:GQ	0/1:55,0,59:57
+22	45281070	.	G	C	16.1	.	DP=6;AF1=0.5001;AC1=1;DP4=1,1,1,1;MQ=48;FQ=7.58;PV4=1,1,0.05,0.36	GT:PL:GQ	0/1:46,0,34:37
+X	117262736	.	G	GG	53.4	.	INDEL;DP=6;AF1=1;AC1=2;DP4=0,0,2,1;MQ=42;FQ=-43.5	GT:PL:GQ	1/1:93,9,0:16
+X	117676909	.	A	G	4.77	.	DP=7;AF1=0.4999;AC1=1;DP4=3,2,1,1;MQ=54;FQ=6.99;PV4=1,0.19,0.0075,1	GT:PL:GQ	0/1:33,0,111:33
+X	117677349	.	G	T	77.3	.	DP=6;AF1=1;AC1=2;DP4=0,0,1,4;MQ=39;FQ=-42	GT:PL:GQ	1/1:110,15,0:27
+X	117677642	.	A	G	140	.	DP=11;AF1=1;AC1=2;DP4=0,0,5,4;MQ=40;FQ=-54	GT:PL:GQ	1/1:173,27,0:51
+X	117679123	.	T	C	3.01	.	DP=8;AF1=0.4997;AC1=1;DP4=2,2,2,0;MQ=48;FQ=4.77;PV4=0.47,0.32,0.26,1	GT:PL:GQ	0/1:30,0,86:28

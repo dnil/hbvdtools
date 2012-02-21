@@ -2,12 +2,13 @@
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cp $scriptdir/case_bvd_add_07_bvdb $scriptdir/../../../bin/second_DB/bvdb
-cp $scriptdir/case_bvd_add_07_bvdb_chksum $scriptdir/../../../bin/second_DB/bvdb_chksum
+mkdir $scriptdir/case_bvd_add_07_DB
+cp $scriptdir/case_bvd_add_07_bvdb $scriptdir/case_bvd_add_07_DB/bvdb
+cp $scriptdir/case_bvd_add_07_bvdb_chksum $scriptdir/case_bvd_add_07_DB/bvdb_chksum
 
-$scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_07_2.vcf -T lung_cancer --database $scriptdir/../../../bin/second_DB
+$scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_07_2.vcf -T lung_cancer --database $scriptdir/case_bvd_add_07_DB
 
-result=$(diff $scriptdir/../../../bin/second_DB/bvdb $scriptdir/expected_result)
+result=$(diff $scriptdir/case_bvd_add_07_DB/bvdb $scriptdir/expected_result)
 
 if [ $? -eq 0 ]; then
     echo "All case_bvd_add_07 are correct !!! Congratz"
@@ -16,4 +17,8 @@ else
     echo "$result"
 fi
 
-
+if [ -e $scriptdir/case_bvd_add_07_DB/bvdb ]
+then
+	rm $scriptdir/case_bvd_add_07_DB/*
+	rmdir $scriptdir/case_bvd_add_07_DB/
+fi

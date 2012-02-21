@@ -20,11 +20,12 @@ From a script:
 	$bvdb->add_variant(CHROM=>"11"", POS=>70802554, REF=>"C", ALT=>"A", allele_count=>1, tags=>"colon_cancer" );
 	$bvdb->add_variant(CHROM=>"12"", POS=>90568222, REF=>"C", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
 	$bvdb->add_variant(CHROM=>"X"", POS=>205664, REF=>"GA", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
-	$bvdb->commit_tran();
+	$bvdb->commit_add();
 
 =cut
 
 #use warnings;
+use strict;
 use Carp;
 use Cwd 'abs_path';
 use File::Basename;
@@ -33,20 +34,45 @@ use Scalar::Util qw(looks_like_number);
 use File::Copy;
 use POSIX qw( strftime );
 use Log::Log4perl qw(:easy); 
+use Exporter;
 
-use constant DB_DIR     => 'DB';
+use vars qw/@ISA @EXPORT/;
+@ISA = qw/Exporter/;
+@EXPORT = qw/validate_bvdb/;
 
-use constant DB_DB      => 'bvdb';
-use constant DB_DB_TMP  => 'bvdb_tmp';
-use constant DB_CHKSUM  => 'bvdb_chksum';
+use constant DB_DIR        => 'DB';
 
-use constant LOG_CONFIG => 'bvdb_log.conf';
+use constant DB_DB         => 'bvdb';
+use constant DB_DB_TMP     => 'bvdb_tmp';
+use constant DB_CHKSUM     => 'bvdb_chksum';
 
-use constant TOTAL        => 'total';
+use constant LOG_FILENAME  => 'bvdb.log';
 
 use constant INDIVIDUAL_COUNT => 'NI';
 use constant ENTRIES          => 'ENTRIES';
 use constant TAGS             => 'TAGS';
+
+=head2 validate_bvdb
+
+    About   : Validates the Background Variation Database.
+    Usage   : perl -MBvdb -e validate_bvdb DATABASE     # (from the command line)
+              validate('DATABASE');                     # (from a script)
+    Args    : Database directory that store the database file.
+
+=cut
+
+sub validate_bvdb
+{
+	my ($db_dir) = @_;
+	
+	if ( !$db_dir && @ARGV ) { $db_dir = $ARGV[0]; }
+	
+	#check if it has database file
+	if (! -e $db_dir."/".DB_DB) { confess "$db_dir is invalid database directory : No database file.\n";	}	
+	#check if it has chksum file
+	if (! -e $db_dir."/".DB_CHKSUM) { confess "$db_dir is invalid database directory : No chksum file.\n";	}	
+	return 1;
+}
 
 =head2 new
 
@@ -62,7 +88,7 @@ sub new
     my $self = {@args};
     bless $self, ref($class) || $class;
     
-    #define location of the database. This can be used for future modification
+    #define location of the database.
     if (!$$self{db_dir}) {
 	    $$self{db_dir}         = dirname(abs_path($0))."/".DB_DIR;
     }
@@ -70,7 +96,7 @@ sub new
     $$self{_bvdb_db_tmp_file} = $$self{db_dir}."/".DB_DB_TMP;
     $$self{_bvdb_chksum_file} = $$self{db_dir}."/".DB_CHKSUM;
     
-    Log::Log4perl->easy_init( { level => $DEBUG, file => ">>".dirname(abs_path($0))."/bvdb.log" } );
+    Log::Log4perl->easy_init( { level => $DEBUG, file => ">>".dirname(abs_path($0))."/".LOG_FILENAME } );
     
     mkdir $$self{db_dir} unless -d $$self{db_dir};
     
@@ -119,7 +145,7 @@ sub warn
     Usage   : my $bvdb = Bvdb->new(); 
               $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
-              $bvdb->commit_tran();
+              $bvdb->commit_add();
     Args    : file          .. vcf file.
               total_samples .. Number of individuals in vcf file.
               tags          .. (optional) Additional information to categorize this set of variants.
@@ -156,29 +182,43 @@ sub begin_add_tran
 
 sub _init_tmp_db
 {
-    my ($self) = @_;
+    my ($self, %args) = @_;
 	
 	open $$self{tmp_db_fh}, ">", $$self{_bvdb_db_tmp_file} or die $!;
 
-	print {$$self{tmp_db_fh}} "##".INDIVIDUAL_COUNT."=".($$self{header}->{total_samples}+$$self{transactions}->{vcf}->{total_samples})."\n";
-	push (@{$$self{header}->{entries}}, basename($$self{transactions}->{vcf}->{file}));
-	print {$$self{tmp_db_fh}} "##".ENTRIES."=".join(',', @{$$self{header}->{entries}})."\n";
-	if ( $$self{transactions}->{vcf}->{tags} ) {
-		my @array = split(/,/, $$self{transactions}->{vcf}->{tags});
-		foreach my $input_tag (@array) {
-			my $found = 0;
-			foreach my $db_tag (@{$$self{header}->{tags}}) {
-				if ($input_tag eq $db_tag) {
-					$found = 1;
-					last;
+	if (exists($args{total_samples})) {
+		print {$$self{tmp_db_fh}} "##".INDIVIDUAL_COUNT."=".$args{total_samples}."\n";
+	} else {
+		print {$$self{tmp_db_fh}} "##".INDIVIDUAL_COUNT."=".($$self{header}->{total_samples}+$$self{transactions}->{vcf}->{total_samples})."\n";
+	}
+
+	if (exists($args{entries})) {
+		print {$$self{tmp_db_fh}} "##".ENTRIES."=".join(',', sort @{$args{entries}})."\n";
+	} else {
+		push (@{$$self{header}->{entries}}, basename($$self{transactions}->{vcf}->{file}));
+		print {$$self{tmp_db_fh}} "##".ENTRIES."=".join(',', sort @{$$self{header}->{entries}})."\n";
+	}
+	
+	if (exists($args{tags})) {
+		print {$$self{tmp_db_fh}} "##".TAGS."=".join(',', sort @{$args{tags}})."\n";
+	} else {
+		if ( $$self{transactions}->{vcf}->{tags} ) {
+			my @array = split(/,/, $$self{transactions}->{vcf}->{tags});
+			foreach my $input_tag (@array) {
+				my $found = 0;
+				foreach my $db_tag (@{$$self{header}->{tags}}) {
+					if ($input_tag eq $db_tag) {
+						$found = 1;
+						last;
+					}
+				}
+				if ( !$found) {
+					push (@{$$self{header}->{tags}}, $input_tag);
 				}
 			}
-			if ( !$found) {
-				push (@{$$self{header}->{tags}}, $input_tag);
-			}
 		}
+		print {$$self{tmp_db_fh}} "##".TAGS."=".join(',', sort @{$$self{header}->{tags}})."\n";
 	}
-	print {$$self{tmp_db_fh}} "##".TAGS."=".join(',', @{$$self{header}->{tags}})."\n";
 }
 
 =head2 load_header
@@ -246,7 +286,7 @@ sub _parse_header_line
 
     chomp($line);
 	$line =~ s/^##//;
-	($key, $value) = split(/=/, $line);
+	my ($key, $value) = split(/=/, $line);
 	
 	if ( $key eq INDIVIDUAL_COUNT) {
 		$$self{header}->{total_samples} = $value;
@@ -271,7 +311,7 @@ sub _read_file_content
     
     open my $my_file, "<", $args{file} or die $!;
 	my $data = do { local $/; <$my_file> };
-	close $myfile;
+	close $my_file;
 	
 	return $data;
 }
@@ -282,7 +322,7 @@ sub _read_file_content
     Usage   : my $bvdb = Bvdb->new(); 
               $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
-              $bvdb->commit_tran();
+              $bvdb->commit_add();
               $bvdb->close();
     Args    : CHROM        .. An identifier from the reference genome.
               POS          .. The reference position, with the 1st base having position 1.
@@ -297,6 +337,7 @@ sub add_variant
 {
     my ($self, %args) = @_;
     my @tags_array;
+    my $tags;
     
     if ( !$$self{transactions}->{active} ) {$self->throw("'begin_tran' haven't been called.\n");}
     
@@ -307,46 +348,55 @@ sub add_variant
     while ( ($$self{current_variant}->{key}) && 
 			($$self{current_variant}->{key} lt $args_key)
 		  ) { 
-    	print {$$self{tmp_db_fh}} "$$self{current_variant}->{CHROM}\t$$self{current_variant}->{POS}\t$$self{current_variant}->{REF}\t$$self{current_variant}->{ALT}\t$$self{current_variant}->{tags}\n";
+    	print {$$self{tmp_db_fh}} "$$self{current_variant}->{CHROM}\t$$self{current_variant}->{POS}\t$$self{current_variant}->{REF}\t$$self{current_variant}->{ALT}\t$$self{current_variant}->{total}\t$$self{current_variant}->{tags}\n";
 		$$self{current_variant} = $self->_next_record();
     }
     
     #if both key are equal
     if ( $$self{current_variant}->{key} eq $args_key) {
-    	my @array = split(/:/, $$self{current_variant}->{tags});
-    	my %hash;
-    	for (my $i=0; $i<=$#array; $i++) {
-    		($tags, $count) = split(/=/, $array[$i]);
-    		if (($tags eq TOTAL) || ($tags eq $$self{transactions}->{vcf}->{tags})){
-	    		$hash{$tags} = $count+$args{allele_count};
-    		} else {
-    			$hash{$tags} = $count;
-    		} 
-    		push (@tags_array, "$tags=$hash{$tags}");
-    	}
-    	if ((!$hash{$$self{transactions}->{vcf}->{tags}}) && ($$self{transactions}->{vcf}->{tags})) {
-    		push (@tags_array, "$$self{transactions}->{vcf}->{tags}=$args{allele_count}");
+    	my $result_tags;
+    	my $total = $$self{current_variant}->{total} + $args{allele_count};
+    	if (! $$self{transactions}->{vcf}->{tags}) {
+			$result_tags = $$self{current_variant}->{tags}; 
+    	} else {
+	    	if ($$self{current_variant}->{tags} eq ".") {
+    			$result_tags = "$$self{transactions}->{vcf}->{tags}=$args{allele_count}";
+	    	} else {
+		    	my @array = split(/:/, $$self{current_variant}->{tags});
+		    	my %hash;
+		    	
+		    	for (my $i=0; $i<=$#array; $i++) {
+		    		my ($tags, $count) = split(/=/, $array[$i]);
+		    		if ($tags eq $$self{transactions}->{vcf}->{tags}){
+			    		$hash{$tags} = $count+$args{allele_count};
+		    		} else {
+		    			$hash{$tags} = $count;
+		    		} 
+		    		push (@tags_array, "$tags=$hash{$tags}");
+		    	}
+		    	if ((!$hash{$$self{transactions}->{vcf}->{tags}}) && ($$self{transactions}->{vcf}->{tags})) {
+		    		push (@tags_array, "$$self{transactions}->{vcf}->{tags}=$args{allele_count}");
+		    	}
+		    	$result_tags = join(':', sort @tags_array);
+	    	}
     	}
     	
-	    print {$$self{tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t".join(':', @tags_array)."\n";
+	    print {$$self{tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t$total\t$result_tags\n";
 		$$self{current_variant} = $self->_next_record();
 		return 1;
     }
 
-    #Either it's the end of file or it's a brand new database or it's just because the key in database is greater than that of vcf file
+    #Either it's the end of file or it's a brand new database or it's just because the key in database is greater than that in vcf file
     #so the variants will be directly added to database.
-    push (@tags_array, TOTAL."=$args{allele_count}");
-    if ( $$self{transactions}->{vcf}->{tags}) {
-	    push (@tags_array, "$$self{transactions}->{vcf}->{tags}=$args{allele_count}")
-    }
-    print {$$self{tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t".join(':', @tags_array)."\n";
+    $tags = ($$self{transactions}->{vcf}->{tags})? "$$self{transactions}->{vcf}->{tags}=$args{allele_count}" : "."; 
+    print {$$self{tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t$args{allele_count}\t$tags\n";
 }
 
 sub _next_record
 {
     my ($self) = @_;
     
-    $line = $self->_next_line();
+    my $line = $self->_next_line();
     if ( !defined($line)) {
     	return undef;
     }
@@ -355,23 +405,22 @@ sub _next_record
     my @array = split(/\t/, $line);
     my $key   = (looks_like_number($array[0]))? sprintf("%02d", $array[0]):$array[0];
     $key .= "|".sprintf("%012s",$array[1])."|".$array[3];
-    #if (looks_like_number($args_CHROM)) { 
-    return {key=>$key, CHROM=>$array[0], POS=>$array[1], REF=>$array[2], ALT=>$array[3], tags=>$array[4]};
+    return {key=>$key, CHROM=>$array[0], POS=>$array[1], REF=>$array[2], ALT=>$array[3], total=>$array[4], tags=>$array[5]};
 }
 
-=head2 commit_tran
+=head2 commit_add
 
-    About   : Save changes to database.
+    About   : Save changes from adding variant information to database.
     Usage   : my $bvdb = Bvdb->new(); 
               $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
-              $bvdb->commit_tran();
+              $bvdb->commit_add();
               $bvdb->close();
     Args    : none
 
 =cut
 
-sub commit_tran
+sub commit_add
 {
     my ($self) = @_;
 
@@ -382,22 +431,27 @@ sub commit_tran
 
     #if the rest of data in the database has "key" greater than that of vcf file, insert them all to database 
     while ( $$self{current_variant}->{POS} ) {
-    	print {$$self{tmp_db_fh}} "$$self{current_variant}->{CHROM}\t$$self{current_variant}->{POS}\t$$self{current_variant}->{REF}\t$$self{current_variant}->{ALT}\t$$self{current_variant}->{tags}\n";
+    	print {$$self{tmp_db_fh}} "$$self{current_variant}->{CHROM}\t$$self{current_variant}->{POS}\t$$self{current_variant}->{REF}\t$$self{current_variant}->{ALT}\t$$self{current_variant}->{total}\t$$self{current_variant}->{tags}\n";
     	$$self{current_variant} = $self->_next_record();
     }
     
     close $$self{tmp_db_fh};
-    $self->_add_chksum();
     
+    #Backup the old chksum if it's existed
+    my $backup_chksum_filename = $$self{_bvdb_chksum_file}.strftime("%Y%m%d%H%M%S", localtime);
+	if ( -e $$self{_bvdb_chksum_file}) {
+		copy($$self{_bvdb_chksum_file}, $backup_chksum_filename) or $self->warn("Cannot backup chksum: $!\n");		
+	}
     #Backup the old database if it's existed
-    my $backup_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
+    my $backup_db_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
 	if ( -e $$self{_bvdb_db_file}) {
-		copy($$self{_bvdb_db_file}, $backup_filename) or $self->warn("Cannot backup database: $!\n");		
+		copy($$self{_bvdb_db_file}, $backup_db_filename) or $self->warn("Cannot backup database: $!\n");		
 	}
 	
-	$self->info("Commit change to database : $$self{_bvdb_db_file}. The backup file is : $backup_filename\n");
+	$self->info("Commit change to database : $$self{_bvdb_db_file}. The backup file is : $backup_db_filename and $backup_chksum_filename\n");
 
 	#Save change to the real database
+    $self->_add_chksum();
    	rename($$self{_bvdb_db_tmp_file}, $$self{_bvdb_db_file}) or $self->warn("Cannot save change to database: $!\n");
    	
    	$$self{transactions}->{active} = 0;
@@ -407,16 +461,21 @@ sub commit_tran
 
 sub _add_chksum
 {
-    my ($self) = @_;
+    my ($self, $chk_sum) = @_;
     
+    my $chk_sum_fh;
 	if ( -e $$self{_bvdb_chksum_file}){
-		open $chk_sum, ">>", $$self{_bvdb_chksum_file} or die $!;
+		open $chk_sum_fh, ">>", $$self{_bvdb_chksum_file} or die $!;
 	} else {
-		open $chk_sum, ">", $$self{_bvdb_chksum_file} or die $!;
+		open $chk_sum_fh, ">", $$self{_bvdb_chksum_file} or die $!;
 	}
 
-	print $chk_sum sha512_hex($self->_read_file_content(file=>$$self{transactions}->{vcf}->{file}))."\n";
-	close $chk_sum;
+	if (defined($chk_sum)) {
+		print $chk_sum_fh $chk_sum."\n";
+	} else {
+		print $chk_sum_fh sha512_hex($self->_read_file_content(file=>$$self{transactions}->{vcf}->{file}))."\n";
+	}
+	close $chk_sum_fh;
 }
 
 =head2 next_data_hash
@@ -428,6 +487,8 @@ sub _add_chksum
 
               # Or having tags to be excluded
               my $x = $vcf->next_data_hash($tags);
+              
+              print "$x->{CHROM}\t$x->{POS}\t$x->{REF}\t$x->{ALT}\t$x->{fq}\t$x->{total}\n";
 
     Args    : (Optional) tags to be excluded.
 
@@ -439,22 +500,18 @@ sub next_data_hash
     
     my $record = $self->_next_record();
     if ( !defined($record)) {
+    	$$self{last_line} = undef;
     	return undef;
     }
 
+	$record->{fq} = $record->{total};
+
     my @db_tags_array = split(/:/, $record->{tags});
-    foreach my $db_tags (@db_tags_array) {
-    	($key, $value) = split(/=/, $db_tags);
-    	if ($key eq TOTAL) {
-    		$record->{fq} = $value;
-    	}
-    }
-    
     my $tag_found;
-    @excluded_tag_array = split(/,/, $excluded_tags);
+    my @excluded_tag_array = split(/,/, $excluded_tags);
     if ( $excluded_tags) {
-    	foreach $db_tags (@db_tags_array) {
-    		($key, $value) = split(/=/, $db_tags);
+    	foreach my $db_tags (@db_tags_array) {
+    		my ($key, $value) = split(/=/, $db_tags);
     		my @db_tag_array = split(/,/, $key);
     		$tag_found = 0;
     		foreach my $db_tag (@db_tag_array) {
@@ -472,7 +529,170 @@ sub next_data_hash
     	}#end foreach $db_tags (@db_tags_array)
     }#end if ( @excluded_tags)
     $record->{fq} /= ($$self{header}->{total_samples}*2);
+    $$self{last_line} = $record;
     return $record;
+}
+
+=head2 merge_databases
+
+    About   : Merge the given databases with current local database.
+    Usage   : my $bvdb = Bvdb->new(); 
+              $bvdb->merge_databases(('OTHER_DB_1','OTHER_DB_2']));
+              $bvdb->commit_merge();
+    Args    : db_dirs       .. databases to be merged.
+=cut
+
+sub merge_databases
+{
+    my ($self, @db_dirs) = @_;
+    
+    my @bvdbs;
+
+	$self->check_databases_duplicated (@db_dirs);
+
+	#Check if the header of local Bvdb has been loaded
+	if (! exists($$self{header} )) {
+		$self->load_header();
+	}
+	
+	#Load headers from input Bvdbs
+	for my $db_dir (@db_dirs) {
+		my $bvdb = Bvdb->new(db_dir=>$db_dir);
+		$bvdb->load_header();
+		push @bvdbs, $bvdb;
+	}
+	push @bvdbs, $self;
+	
+	#Merge headers
+	my %hash_merged_header;
+	my %hash_tags;
+	$hash_merged_header{total_samples} = 0;
+    for my $bvdb (@bvdbs) {
+    	$hash_merged_header{total_samples} += $$bvdb{header}->{total_samples};
+    	for my $entry (@{$$bvdb{header}->{entries}}) {
+			push @{$hash_merged_header{entries}}, $entry;
+    	}
+		for my $tag (@{$$bvdb{header}->{tags}}) {
+			if (! exists($hash_tags{$tag})) {
+				$hash_tags{$tag} = 1;
+				push @{$hash_merged_header{tags}}, $tag;
+			}
+		}
+    }
+    $self->_init_tmp_db(%hash_merged_header);
+
+	#Set pointer to the first record in each database
+    for my $bvdb (@bvdbs) {
+    	$bvdb->next_data_hash();
+    }
+
+    # Go through all databases simultaneously and output each line at a time
+    while (1) {
+    	#Get minimum position
+    	my $chrom   = undef;
+    	my $pos     = undef;
+    	my $ref     = undef;
+    	my $alt     = undef;
+    	my $min_key = undef;
+    	my $key; 
+    	for my $bvdb (@bvdbs) {
+	    	$key = $$bvdb{last_line}->{key};
+	    	if (! $key) {next;}
+	    	if (! defined($min_key)) {
+	    		$chrom   = $$bvdb{last_line}->{CHROM};
+	    		$pos     = $$bvdb{last_line}->{POS};
+	    		$ref     = $$bvdb{last_line}->{REF};
+	    		$alt     = $$bvdb{last_line}->{ALT};
+	    		$min_key = $key;
+	    		next;  
+	    	}
+	    	if ($min_key gt $key) {
+	    		$chrom   = $$bvdb{last_line}->{CHROM};
+	    		$pos     = $$bvdb{last_line}->{POS};
+	    		$ref     = $$bvdb{last_line}->{REF};
+	    		$alt     = $$bvdb{last_line}->{ALT};
+	    		$min_key = $key;
+	    		next;  
+	    	}
+    	}
+    	if (! defined($min_key)) { last; }
+    	
+    	#merge variants frequencies from all databases that have the minimum key
+    	my $total_fq  = 0;
+		for (keys %hash_tags) {
+			delete $hash_tags{$_};
+		}
+    	for my $bvdb (@bvdbs) {
+    		if ($$bvdb{last_line}->{key} ne $min_key) { next; }
+    		$total_fq += $$bvdb{last_line}->{total};
+    		if ($$bvdb{last_line}->{tags} ne '.') {
+	    		my @tags_array = split(/:/, $$bvdb{last_line}->{tags});
+	    		for my $tags (@tags_array) {
+	    			my ($tag_key, $value) = split(/=/, $tags);
+	    			if (exists($hash_tags{$tag_key})) {
+	    				$hash_tags{$tag_key} += $value;
+	    			} else {
+	    				$hash_tags{$tag_key} = $value;
+	    			}
+	    		}
+    		}
+    		
+    		$bvdb->next_data_hash();
+    	}
+    	
+    	my @tags_array;
+    	while (my ($tags_key, $value) = each(%hash_tags)) {
+			push @tags_array, $tags_key."=".$value;
+		}
+    	my $tags_result = join(":", sort @tags_array);
+    	if (! $tags_result) {
+    		$tags_result = ".";
+    	}
+    	print {$$self{tmp_db_fh}} "$chrom\t$pos\t$ref\t$alt\t$total_fq\t".$tags_result."\n";
+    } # end while(1)
+	
+	pop @bvdbs;
+    close $$self{tmp_db_fh};
+    
+    #Backup the old chksum if it's existed
+    my $backup_chksum_filename = $$self{_bvdb_chksum_file}.strftime("%Y%m%d%H%M%S", localtime);
+	if ( -e $$self{_bvdb_chksum_file}) {
+		copy($$self{_bvdb_chksum_file}, $backup_chksum_filename) or $self->warn("Cannot backup chksum: $!\n");		
+	}
+    #Backup the old database if it's existed
+    my $backup_db_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
+	if ( -e $$self{_bvdb_db_file}) {
+		copy($$self{_bvdb_db_file}, $backup_db_filename) or $self->warn("Cannot backup database: $!\n");		
+	}
+	
+	$self->info("Commit change to database : $$self{_bvdb_db_file}. The backup file is : $backup_db_filename and $backup_chksum_filename\n");
+
+	#Save change to the real database
+    for my $bvdb (@bvdbs) {
+		open my $chk_sum_file, "<", $$bvdb{_bvdb_chksum_file} or die $!;
+		while( my $line = <$chk_sum_file>)  {
+			chomp($line);
+		    $self->_add_chksum($line);
+		}
+		close $chk_sum_file;
+    }
+   	rename($$self{_bvdb_db_tmp_file}, $$self{_bvdb_db_file}) or $self->warn("Cannot save change to database: $!\n");
+}
+
+=head2 commit_merge
+
+    About   : Save changes from merging database.
+    Usage   : my $bvdb = Bvdb->new(); 
+              $bvdb->merge_databases(('OTHER_DB_1','OTHER_DB_2'));
+              $bvdb->commit_merge();
+    Args    : none
+
+=cut
+
+sub commit_merge
+{
+    my ($self) = @_;
+
 }
 
 =head2 close
@@ -481,7 +701,7 @@ sub next_data_hash
     Usage   : my $bvdb = Bvdb->new(); 
               $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
               $bvdb->add_variant(CHROM=>'x', POS=>154890526, REF=>'ATGTGTGTG', ALT=>'ATGTGTGTGTG', allele_count=>4);
-              $bvdb->commit_tran();
+              $bvdb->commit_add();
               $bvdb->close();
     Args    : none
 
@@ -491,6 +711,11 @@ sub close
 {
     my ($self) = @_;
     
+    if ($$self{transactions}->{active}) {
+    	$self->warn("Transactions haven't been commited.\n"); 
+    	return 0;
+    }
+
 	if (defined($$self{db_fh})) {
     	close $$self{db_fh};
 	}
@@ -501,7 +726,7 @@ sub close
     About   : Check if content from the given vcf file was already in the database. 
     Usage   : my $bvdb = Bvdb->new();
               if ($bvdb->vcf_exist(file=>'my.vcf')) { 
-              	print "Duplicated !!!!\n";
+              	print "The content of this vcf file was already in the database !!!!\n";
               }
     Args    : file    .. Vcf file. 
 
@@ -517,23 +742,68 @@ sub vcf_exist
     
     my $digest_msg = sha512_hex($self->_read_file_content(%args));
 
-	open my $chk_sum, "<", $$self{_bvdb_chksum_file} or die $!;
-	while( my $line = <$chk_sum>)  {
+	open my $chk_sum_file, "<", $$self{_bvdb_chksum_file} or die $!;
+	while( my $line = <$chk_sum_file>)  {
 		chomp($line);
 		if ( $digest_msg eq $line) {
-			close $chk_sum;
+			close $chk_sum_file;
 			return 1;
-		}   
+		}
 	}
-	close $chk_sum;
+	close $chk_sum_file;
 
+	return 0;
+}
+
+=head2 check_databases_duplicated
+
+    About   : Check if the content from the input databases are duplicated with the current local database. 
+    Usage   : my $bvdb = Bvdb->new();
+              $bvdb->check_database_duplicated(('OTHER_DB_1', 'OTHER_DB_2')); 
+    Args    : Location of other databases. 
+
+=cut
+
+sub check_databases_duplicated
+{
+    my ($self, @db_dirs) = @_;
+    my %has_chksum;
+    
+    for my $db_dir (@db_dirs) {
+	    if ( ! -e $db_dir) { $self->throw("$db_dir does not exist!!.\n"); }
+    }
+    
+    #Read list of chksums from local database if exist
+    if ( -e $$self{_bvdb_chksum_file}) {
+		open my $chk_sum, "<", $$self{_bvdb_chksum_file} or die $!;
+		while( my $line = <$chk_sum>)  {
+			chomp($line);
+			$has_chksum{$line} = 1;
+		}
+		close $chk_sum;
+	}
+	
+	#Read and check the content from the input databases
+    for my $db_dir (@db_dirs) {
+		open my $chk_sum, "<", $db_dir."/".DB_CHKSUM or die $!;
+		while( my $line = <$chk_sum>)  {
+			chomp($line);
+			if ( exists($has_chksum{$line})) {
+				$self->throw("Some of the content from $db_dir are duplicated with some from other databases.\n"); 
+			}
+			$has_chksum{$line} = 1;
+		}
+    }
+	
 	return 0;
 }
 
 sub END
 {
+	my ($self) = @_;
+	
     if ($$self{transactions}->{active}) {
-    	$self->warn("'commit_tran' haven't been called.\n"); 
+    	$self->warn("'commit_add' haven't been called.\n"); 
     	return 0;
     }
 }

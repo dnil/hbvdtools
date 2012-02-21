@@ -9,5 +9,9 @@ $scriptdir/case_bvd_add_04/validate_result.sh
 $scriptdir/case_bvd_add_05/validate_result.sh
 $scriptdir/case_bvd_add_06/validate_result.sh
 $scriptdir/case_bvd_add_07/validate_result.sh
+$scriptdir/case_bvd_add_08/validate_result.sh
+$scriptdir/case_bvd_add_09/validate_result.sh
+$scriptdir/case_bvd_add_10/validate_result.sh
+$scriptdir/case_bvd_add_11/validate_result.sh
 
 

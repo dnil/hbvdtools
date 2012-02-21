@@ -6,6 +6,7 @@
 use Carp;
 use Vcf;
 use Bvdb;
+use strict;
 
 use constant FIX_COL => 9;
 
@@ -25,7 +26,7 @@ sub error
         "Usage: bvd-add [OPTIONS] file.vcf\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
-        "   -d, --database                  Specific target database.\n",
+        "   -d, --database                  Specific target database. Default is DB\n",
         "   -T, --tags <string>             Additional information to categorize variant from this vcf file, comma separated.\n",
         "\n";
 }
@@ -58,7 +59,7 @@ sub add_vcf_to_bvd
 	my $n_var_samples = $#{$$vcf{columns}}-(FIX_COL)+1;
 
 	#Init bvdb connection
-    $bvdb = Bvdb->new(db_dir=>$$opts{database});
+    my $bvdb = Bvdb->new(db_dir=>$$opts{database});
 	$bvdb->begin_add_tran(file=>$$opts{file}, total_samples=>$n_var_samples, tags=>$$opts{tags});
 
 	my %fq = (
@@ -98,7 +99,7 @@ sub add_vcf_to_bvd
 		}
 	}
 	
-	$bvdb->commit_tran();
+	$bvdb->commit_add();
 	$vcf->close();
 	$bvdb->close();
 }

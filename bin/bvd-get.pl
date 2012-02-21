@@ -5,6 +5,7 @@
 
 use Carp;
 use Bvdb;
+use strict;
 
 my $opts = parse_params();
 bvd_get($opts);
@@ -21,9 +22,9 @@ sub error
         "About: Export variant frequencies from Background Variation Database into generic input format for ANNOVAR.\n",
         "Usage: bvd-get [OPTIONS]\n",
         "Options:\n",
-        "   -h, -?, --help                          This help message.\n",
-        "   -d, --database                  Specific target database.\n",
-        "   -T, --tags <string>                     Tag to exclude, comma separated.\n",
+        "   -h, -?, --help                  This help message.\n",
+        "   -d, --database                  Specific target database. Default is DB\n",
+        "   -T, --tags <string>             Tags to exclude, comma separated.\n",
         "\n";
 }
 
@@ -47,7 +48,7 @@ sub bvd_get
 	validate_tags();
 
 	#Connect to DB
-	$bvdb = Bvdb->new(db_dir=>$$opts{database});
+	my $bvdb = Bvdb->new(db_dir=>$$opts{database});
 	$bvdb->load_header();
 	while (my $variant = $bvdb->next_data_hash($$opts{tags})) {
 		if ($variant->{fq}) {

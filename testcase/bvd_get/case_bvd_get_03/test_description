@@ -1,4 +1,0 @@
-Module : bvd_get
-Description : To test with a weird excluded-tags combination
-
-Only one case so far: lung_cancer,colon_cancer,lung_cancer

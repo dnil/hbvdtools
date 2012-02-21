@@ -2,8 +2,11 @@
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-rm $scriptdir/../../../bin/DB/*
-rmdir $scriptdir/../../../bin/DB/
+if [ -e $scriptdir/../../../bin/DB/bvdb ]
+then
+	rm $scriptdir/../../../bin/DB/*
+	rmdir $scriptdir/../../../bin/DB/
+fi
 
 $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_03_1.vcf --tags colon_cancer,lung_cancer
 $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_03_2.vcf --tags colon_cancer,lung_cancer 
