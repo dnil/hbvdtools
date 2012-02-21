@@ -2,11 +2,14 @@
 #
 # Author: jessada@kth.se
 #
-
 use Carp;
-use Vcf;
-use Bvdb;
 use strict;
+use Cwd 'abs_path';
+use File::Basename;
+
+use lib dirname(abs_path($0))."/lib";
+use Bvdb;
+use Vcf;
 
 use constant FIX_COL => 9;
 

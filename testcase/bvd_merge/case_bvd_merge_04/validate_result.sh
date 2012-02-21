@@ -2,6 +2,7 @@
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+export PERL5LIB=$scriptdir"/../../../bin/lib"
 2>&1 perl -MBvdb -e validate_bvdb $scriptdir/case_bvd_merge_04_DB_1/ | head -1 > $scriptdir/tmp.txt
 echo $scriptdir'/case_bvd_merge_04_DB_1/ is invalid database directory : No database file.' > $scriptdir/expected_result
 result=$(diff $scriptdir/tmp.txt $scriptdir/expected_result)

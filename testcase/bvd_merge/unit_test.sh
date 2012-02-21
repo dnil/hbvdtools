@@ -14,5 +14,6 @@ $scriptdir/case_bvd_merge_09/validate_result.sh
 $scriptdir/case_bvd_merge_10/validate_result.sh
 $scriptdir/case_bvd_merge_11/validate_result.sh
 $scriptdir/case_bvd_merge_12/validate_result.sh
+$scriptdir/case_bvd_merge_13/validate_result.sh
 
 
