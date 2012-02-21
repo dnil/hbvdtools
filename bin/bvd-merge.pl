@@ -23,7 +23,7 @@ sub error
     if ( scalar @msg ) { croak join('',@msg); }
     die
         "About: Merge the given databases with local database.\n",
-        "Usage: bvd-get [OPTIONS]\n",
+        "Usage: bvd-merge [OPTIONS] DB1/ DB2/\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
         "   -d, --database                  Specific target database. Default is DB\n",

@@ -24,7 +24,7 @@ sub error
     if ( scalar @msg ) { croak join('',@msg); }
     die
         "About: Export variant frequencies from Background Variation Database into generic input format for ANNOVAR.\n",
-        "Usage: bvd-get [OPTIONS]\n",
+        "Usage: bvd-get [OPTIONS] > out.avdb\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
         "   -d, --database                  Specific target database. Default is DB\n",
