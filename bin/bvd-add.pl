@@ -25,12 +25,13 @@ sub error
     my (@msg) = @_;
     if ( scalar @msg ) { croak join('',@msg); }
     die
-        "About: Add variant frequencies to Background Variation Database.\n",
+        "About: Add variant frequencies to Background Variation Database, one vcf file at a time.\n",
         "Usage: bvd-add [OPTIONS] file.vcf\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
         "   -d, --database                  Specific target database. Default is DB\n",
         "   -T, --tags <string>             Additional information to categorize variant from this vcf file, comma separated.\n",
+        "Note: The input vcf file is in plain text format, not in compressed format (i.e. Gzip), even though vcf libraries were used here.\n",
         "\n";
 }
 

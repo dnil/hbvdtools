@@ -57,15 +57,15 @@ sub bvd_get
 	while (my $variant = $bvdb->next_data_hash($$opts{tags})) {
 		if ($variant->{fq}) {
 			my $len = $variant->{POS}+length($variant->{REF})-1;
-			print "$variant->{CHROM}\t$variant->{POS}\t$len\t$variant->{REF}\t$variant->{ALT}\t$variant->{fq}\n";
+			print "$variant->{CHROM} $variant->{POS} $len $variant->{REF} $variant->{ALT} $variant->{fq}\n";
 		}
 	}
 	$bvdb-close();
 }
 
-#Assuming that tags value is stored in $$opts{tags}
 sub validate_tags
 {
+	#Assuming that tags value is stored in $$opts{tags}
 	my @array = split(/,/, $$opts{tags});
 	my %seen = ();
 	my @unique = grep { ! $seen{ $_ }++ } @array;
