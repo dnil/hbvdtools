@@ -89,9 +89,8 @@ sub new
     bless $self, ref($class) || $class;
     
     #define location of the database.
-    if (!$$self{db_dir}) {
-	    $$self{db_dir}         = dirname(abs_path($0))."/".DB_DIR;
-    }
+	$$self{db_dir}            = dirname(abs_path($0))."/".DB_DIR unless defined($$self{db_dir});
+
     $$self{_bvdb_db_file}     = $$self{db_dir}."/".DB_DB;
     $$self{_bvdb_db_tmp_file} = $$self{db_dir}."/".DB_DB_TMP;
     $$self{_bvdb_chksum_file} = $$self{db_dir}."/".DB_CHKSUM;
@@ -101,7 +100,8 @@ sub new
     mkdir $$self{db_dir} unless -d $$self{db_dir};
     
     #set default value
-    $$self{buffer}   = [];       # buffer stores the lines in the reverse order
+    $$self{buffer}         = [];       # buffer stores the lines in the reverse order
+    $$self{save_diskspace} = 0 unless defined($$self{save_diskspace}); 
     
     $self->info("Connect to database : $$self{_bvdb_db_file}.\n");
     
@@ -437,23 +437,16 @@ sub commit_add
     
     close $$self{tmp_db_fh};
     
-    #Backup the old chksum if it's existed
-    my $backup_chksum_filename = $$self{_bvdb_chksum_file}.strftime("%Y%m%d%H%M%S", localtime);
-	if ( -e $$self{_bvdb_chksum_file}) {
-		copy($$self{_bvdb_chksum_file}, $backup_chksum_filename) or $self->warn("Cannot backup chksum: $!\n");		
-	}
-    #Backup the old database if it's existed
-    my $backup_db_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
-	if ( -e $$self{_bvdb_db_file}) {
-		copy($$self{_bvdb_db_file}, $backup_db_filename) or $self->warn("Cannot backup database: $!\n");		
-	}
-	
-	$self->info("Commit change to database : $$self{_bvdb_db_file}. The backup file is : $backup_db_filename and $backup_chksum_filename\n");
-
+    if (! $$self{save_diskspace}) {
+	    $self->_backup();
+    }
+    
 	#Save change to the real database
     $self->_add_chksum();
    	rename($$self{_bvdb_db_tmp_file}, $$self{_bvdb_db_file}) or $self->warn("Cannot save change to database: $!\n");
    	
+	$self->info("Changes have been committed to the database $$self{_bvdb_db_file}\n");
+
    	$$self{transactions}->{active} = 0;
 
 	return 1;
@@ -464,11 +457,8 @@ sub _add_chksum
     my ($self, $chk_sum) = @_;
     
     my $chk_sum_fh;
-	if ( -e $$self{_bvdb_chksum_file}){
-		open $chk_sum_fh, ">>", $$self{_bvdb_chksum_file} or die $!;
-	} else {
-		open $chk_sum_fh, ">", $$self{_bvdb_chksum_file} or die $!;
-	}
+	
+	open $chk_sum_fh, ">>", $$self{_bvdb_chksum_file} or die $!;
 
 	if (defined($chk_sum)) {
 		print $chk_sum_fh $chk_sum."\n";
@@ -538,7 +528,7 @@ sub next_data_hash
     About   : Merge the given databases with current local database.
     Usage   : my $bvdb = Bvdb->new(); 
               $bvdb->merge_databases(('OTHER_DB_1','OTHER_DB_2']));
-              $bvdb->commit_merge();
+              $bvdb->close();
     Args    : db_dirs       .. databases to be merged.
 =cut
 
@@ -654,19 +644,10 @@ sub merge_databases
 	pop @bvdbs;
     close $$self{tmp_db_fh};
     
-    #Backup the old chksum if it's existed
-    my $backup_chksum_filename = $$self{_bvdb_chksum_file}.strftime("%Y%m%d%H%M%S", localtime);
-	if ( -e $$self{_bvdb_chksum_file}) {
-		copy($$self{_bvdb_chksum_file}, $backup_chksum_filename) or $self->warn("Cannot backup chksum: $!\n");		
-	}
-    #Backup the old database if it's existed
-    my $backup_db_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
-	if ( -e $$self{_bvdb_db_file}) {
-		copy($$self{_bvdb_db_file}, $backup_db_filename) or $self->warn("Cannot backup database: $!\n");		
-	}
+    if (! $$self{save_diskspace}) {
+	    $self->_backup();
+    }
 	
-	$self->info("Commit change to database : $$self{_bvdb_db_file}. The backup file is : $backup_db_filename and $backup_chksum_filename\n");
-
 	#Save change to the real database
     for my $bvdb (@bvdbs) {
 		open my $chk_sum_file, "<", $$bvdb{_bvdb_chksum_file} or die $!;
@@ -677,22 +658,8 @@ sub merge_databases
 		close $chk_sum_file;
     }
    	rename($$self{_bvdb_db_tmp_file}, $$self{_bvdb_db_file}) or $self->warn("Cannot save change to database: $!\n");
-}
 
-=head2 commit_merge
-
-    About   : Save changes from merging database.
-    Usage   : my $bvdb = Bvdb->new(); 
-              $bvdb->merge_databases(('OTHER_DB_1','OTHER_DB_2'));
-              $bvdb->commit_merge();
-    Args    : none
-
-=cut
-
-sub commit_merge
-{
-    my ($self) = @_;
-
+	$self->info("Changes have been committed to the database $$self{_bvdb_db_file}\n");
 }
 
 =head2 close
@@ -718,6 +685,24 @@ sub close
 
 	if (defined($$self{db_fh})) {
     	close $$self{db_fh};
+	}
+}
+
+sub _backup
+{
+    my ($self) = @_;
+    
+    #Backup the old chksum if it's existed
+    my $backup_chksum_filename = $$self{_bvdb_chksum_file}.strftime("%Y%m%d%H%M%S", localtime);
+	if ( -e $$self{_bvdb_chksum_file}) {
+		copy($$self{_bvdb_chksum_file}, $backup_chksum_filename) or $self->warn("Cannot backup chksum: $!\n");		
+		$self->info("The old chksum has been backup. The backup file is $backup_chksum_filename\n");
+	}
+    #Backup the old database if it's existed
+    my $backup_db_filename = $$self{_bvdb_db_file}.strftime("%Y%m%d%H%M%S", localtime);
+	if ( -e $$self{_bvdb_db_file}) {
+		copy($$self{_bvdb_db_file}, $backup_db_filename) or $self->warn("Cannot backup database: $!\n");		
+		$self->info("The old database has been backup. The backup file is $backup_db_filename\n");
 	}
 }
 

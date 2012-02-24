@@ -2,6 +2,13 @@
 
 scriptdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+if [ -e $scriptdir/../../../bin/DB/bvdb ]
+then
+	rm $scriptdir/../../../bin/DB/*
+	rmdir $scriptdir/../../../bin/DB/
+fi
+
+mkdir $scriptdir/../../../bin/DB/
 cp $scriptdir/case_bvd_add_02_bvdb $scriptdir/../../../bin/DB/bvdb
 cp $scriptdir/case_bvd_add_02_bvdb_chksum $scriptdir/../../../bin/DB/bvdb_chksum
 

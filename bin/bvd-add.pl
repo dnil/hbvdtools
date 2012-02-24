@@ -31,6 +31,7 @@ sub error
         "   -h, -?, --help                  This help message.\n",
         "   -d, --database                  Specific target database. Default is DB\n",
         "   -T, --tags <string>             Additional information to categorize variant from this vcf file, comma separated.\n",
+        "   -s, --savediskspace             Save disk space, i.e. no backup\n",
         "Note: The input vcf file is in plain text format, not in compressed format (i.g. Gzip), even though vcf libraries were used here.\n",
         "\n";
 }
@@ -41,6 +42,7 @@ sub parse_params
     my $opts = { args=>[$0, @ARGV] };
     while (my $arg=shift(@ARGV))
     {
+        if ( $arg eq '-s' || $arg eq '--savediskspace' ) { $$opts{save_diskspace}=1; next; }
         if ( $arg eq '-T' || $arg eq '--tags' ) { $$opts{tags}=shift(@ARGV); next; }
         if ( $arg eq '-d' || $arg eq '--database' ) { $$opts{database}=shift(@ARGV); next; }
         if ( $arg eq '-?' || $arg eq '-h' || $arg eq '--help' ) { error(); }
@@ -63,7 +65,7 @@ sub add_vcf_to_bvd
 	my $n_var_samples = $#{$$vcf{columns}}-(FIX_COL)+1;
 
 	#Init bvdb connection
-    my $bvdb = Bvdb->new(db_dir=>$$opts{database});
+    my $bvdb = Bvdb->new(db_dir=>$$opts{database}, save_diskspace=>$$opts{save_diskspace});
 	$bvdb->begin_add_tran(file=>$$opts{file}, total_samples=>$n_var_samples, tags=>$$opts{tags});
 
 	my %fq = (
