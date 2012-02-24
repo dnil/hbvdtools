@@ -75,14 +75,14 @@ sub add_vcf_to_bvd
 		for (my $col=0; $col<$n_var_samples; $col++) {
 			my ($alleles,$seps,$is_phased,$is_empty) = $vcf->parse_haplotype($x, $$vcf{columns}->[$col+(FIX_COL)]);
 	    	if ($#$alleles > 0) {
-	    		if ($$alleles[0] ne	 $$x{REF}) {
+	    		if (($$alleles[0] ne $$x{REF}) && ($$alleles[0] ne ".")){
 		    		if (exists $fq{$$alleles[0]}) {
 	    				$fq{$$alleles[0]} += 1; 
 	    			} else {
 	    				$fq{$$alleles[0]} = 1; 
 	    			}
 	    		}
-	    		if ($$alleles[1] ne $$x{REF}) {
+	    		if (($$alleles[1] ne $$x{REF}) && ($$alleles[1] ne ".")){
 		    		if (exists $fq{$$alleles[1]}) {
 	    				$fq{$$alleles[1]} += 1; 
 	    			} else {

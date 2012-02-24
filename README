@@ -11,8 +11,11 @@ Documentation:
  bvd-get.pl -h
  bvd-merge.pl -h
 
-Reference:
- Vcf-tools - http://bioinformatics.oxfordjournals.org/content/27/15/2156
+Acknowledgement:
+Vcf-tools - 
+The Variant Call Format and VCFtools, Petr Danecek et al (2011) Bioinformatics 27 (15):2156-8
+doi: 10.1093/bioinformatics/btr330
+http://bioinformatics.oxfordjournals.org/content/27/15/2156
 
 This package is maintained and developed by
  Jessada Thutkawkorapin - Jessada@kth.se
