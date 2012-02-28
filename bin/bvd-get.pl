@@ -27,7 +27,7 @@ sub error
         "Usage: bvd-get [OPTIONS] > out.avdb\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
-        "   -d, --database                  Specific target database. Default is DB\n",
+        "   -d, --database <db_path>        Specific target database. Default is DB\n",
         "   -T, --tags <string>             Tags to exclude, comma separated.\n",
         "\n";
 }

@@ -29,10 +29,10 @@ sub error
         "Usage: bvd-add [OPTIONS] file.vcf\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
-        "   -d, --database                  Specific target database. Default is DB\n",
+        "   -d, --database <db_path>        Specific target database. Default is DB\n",
         "   -T, --tags <string>             Additional information to categorize variant from this vcf file, comma separated.\n",
         "   -s, --savediskspace             Save disk space, i.e. no backup\n",
-        "Note: The input vcf file is in plain text format, not in compressed format (i.g. Gzip), even though vcf libraries were used here.\n",
+        "Note: The input vcf file is in plain text format, not in compressed format (e.g. gzip), even though Vcf.pm was used here.\n",
         "\n";
 }
 

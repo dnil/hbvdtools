@@ -26,7 +26,7 @@ sub error
         "Usage: bvd-merge [OPTIONS] DB1/ DB2/\n",
         "Options:\n",
         "   -h, -?, --help                  This help message.\n",
-        "   -d, --database                  Specific target database. Default is DB\n",
+        "   -d, --database <db_path>        Specific target database. Default is DB\n",
         "   -s, --savediskspace             Save disk space, i.e. no backup\n",
         "\n";
 }
