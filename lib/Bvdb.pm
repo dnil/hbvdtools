@@ -1,31 +1,9 @@
 package Bvdb;
 
-#
-# Authors: jessada@kth.se
-#
-
-=head1 NAME
-
-Bvdb.pm.  Module for reading and writing Background Variation Database files. 
-
-=head1 SYNOPSIS
-
-From a script:
-    use Bvdb;
-
-    my $bvdb = bvdb->new();
-	$bvdb->begin_add_tran(file=>'myfile.vcf', total_samples=>1);
-	
-    # Add variant information to the database.
-	$bvdb->add_variant(CHROM=>"11"", POS=>70802554, REF=>"C", ALT=>"A", allele_count=>1, tags=>"colon_cancer" );
-	$bvdb->add_variant(CHROM=>"12"", POS=>90568222, REF=>"C", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
-	$bvdb->add_variant(CHROM=>"X"", POS=>205664, REF=>"GA", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
-	$bvdb->commit_add();
-
-=cut
-
-#use warnings;
+use 5.006;
 use strict;
+#use warnings;
+
 use Carp;
 use Cwd 'abs_path';
 use File::Basename;
@@ -52,6 +30,35 @@ use constant INDIVIDUAL_COUNT => 'NI';
 use constant ENTRIES          => 'ENTRIES';
 use constant TAGS             => 'TAGS';
 
+=head1 NAME
+
+Bvdb.pm.  Module for reading and writing Background Variation Database files. 
+
+=head1 VERSION
+
+Version 0.01
+
+=cut
+
+our $VERSION = '0.01';
+
+
+=head1 SYNOPSIS
+
+From a script:
+    use Bvdb;
+
+    my $bvdb = bvdb->new();
+	$bvdb->begin_add_tran(file=>'myfile.vcf', total_samples=>1);
+	
+    # Add variant information to the database.
+	$bvdb->add_variant(CHROM=>"11"", POS=>70802554, REF=>"C", ALT=>"A", allele_count=>1, tags=>"colon_cancer" );
+	$bvdb->add_variant(CHROM=>"12"", POS=>90568222, REF=>"C", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
+	$bvdb->add_variant(CHROM=>"X"", POS=>205664, REF=>"GA", ALT=>"G", allele_count=>2, tags=>"colon_cancer" );
+	$bvdb->commit_add();
+
+=head1 EXPORT
+
 =head2 validate_bvdb
 
     About   : Validates the Background Variation Database.
@@ -73,6 +80,8 @@ sub validate_bvdb
 	if (! -e $db_dir."/".DB_CHKSUM) { confess "$db_dir is invalid database directory : No chksum file.\n";	}	
 	return 1;
 }
+
+=head1 SUBROUTINES/METHODS
 
 =head2 new
 
@@ -793,4 +802,31 @@ sub END
     }
 }
 
-1;
+=head1 AUTHOR
+
+Jessada Thutkawkorapin, C<< <jessada at kth.se> >>
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Bvdb
+
+
+=head1 ACKNOWLEDGEMENTS
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2012 Jessada Thutkawkorapin.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
+
+
+=cut
+
+1; # End of Bvdb

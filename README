@@ -1,22 +1,27 @@
-bvdb-tools - Background Varaiation Database tools
-version : 0.1
+PREREQUISITE
 
-Copyright (c) Jessada Thutkawkorapin, Daniel Nilsson, 2012. 
+- Vcftools (http://sourceforge.net/projects/vcftools/)
 
-Released under the Perl Artistic License 2.0.
+INSTALLATION
 
-Documentation:
- perldoc Bvdb.pm
- bvd-add.pl -h
- bvd-get.pl -h
- bvd-merge.pl -h
+To install this module, run the following commands:
 
-Acknowledgement:
-Vcf-tools - 
-The Variant Call Format and VCFtools, Petr Danecek et al (2011) Bioinformatics 27 (15):2156-8
-doi: 10.1093/bioinformatics/btr330
-http://bioinformatics.oxfordjournals.org/content/27/15/2156
+	sudo ./install.sh
 
-This package is maintained and developed by
- Jessada Thutkawkorapin - Jessada@kth.se
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Bvdb
+
+LICENSE AND COPYRIGHT
+
+Copyright (C) 2012 Jessada Thutkawkorapin
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 
