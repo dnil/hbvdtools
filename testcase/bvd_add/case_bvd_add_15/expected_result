@@ -1,6 +1,7 @@
 ##NI=2
 ##ENTRIES=case_bvd_add_08_1.vcf,case_bvd_add_15_2.vcf
 ##TAGS=
+##DB_ID=d4bed912c2631341303434
 1	866319	G	A	4	.
 1	866522	C	CCCCC	2	.
 1	870903	T	C	2	.

@@ -17,6 +17,10 @@ $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_04_6.vcf -T prostate_
 $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_04_7.vcf -T prostate_cancer
 $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_add_04_8.vcf
 
+cp $scriptdir/result_template $scriptdir/expected_result
+db_id="$( grep "^##DB_ID" $scriptdir/../../../bin/DB/bvdb )"
+sed -i -e "s/^##DB_ID=.*/$db_id/g" $scriptdir/expected_result
+
 result=$(diff $scriptdir/../../../bin/DB/bvdb $scriptdir/expected_result)
 
 if [ $? -eq 0 ]; then
@@ -26,4 +30,4 @@ else
     echo "$result"
 fi
 
-
+rm $scriptdir/expected_result

@@ -1,0 +1,7 @@
+##NI=8
+##ENTRIES=case_bvd_add_04_1.vcf,case_bvd_add_04_2.vcf,case_bvd_add_04_3.vcf,case_bvd_add_04_4.vcf,case_bvd_add_04_5.vcf,case_bvd_add_04_6.vcf,case_bvd_add_04_7.vcf,case_bvd_add_04_8.vcf
+##TAGS=colon_cancer,lung_cancer,prostate_cancer
+##REFERENCE=file:///bubo/nobackup/uppnex/REFERENCE/Homo_sapiens/GRCh37/program_files/GATK/concat.fasta
+10	800001	G	A	16	colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=4
+10	800006	G	A	12	colon_cancer,lung_cancer=4:lung_cancer=4:prostate_cancer=2
+10	800007	G	A	12	colon_cancer,lung_cancer=4:lung_cancer=4

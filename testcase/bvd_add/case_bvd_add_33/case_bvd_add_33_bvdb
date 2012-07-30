@@ -1,0 +1,42 @@
+##NI=1
+##ENTRIES=case_bvd_add_29.vcf
+##TAGS=colon_cancer,lung_cancer
+##DB_ID=d4bed912c2631341231248
+##CONTIG=<ID=1,length=249250621>
+##CONTIG=<ID=10,length=135534747>
+##CONTIG=<ID=11,length=135006516>
+##CONTIG=<ID=12,length=133851895>
+##CONTIG=<ID=13,length=115169878>
+##CONTIG=<ID=14,length=107349540>
+##CONTIG=<ID=15,length=102531392>
+##CONTIG=<ID=16,length=90354753>
+##CONTIG=<ID=17,length=81195210>
+##CONTIG=<ID=18,length=78077248>
+##CONTIG=<ID=19,length=59128983>
+##CONTIG=<ID=2,length=243199373>
+##CONTIG=<ID=20,length=63025520>
+##CONTIG=<ID=21,length=48129895>
+##CONTIG=<ID=22,length=51304566>
+##CONTIG=<ID=3,length=198022430>
+##CONTIG=<ID=4,length=191154276>
+##CONTIG=<ID=5,length=180915260>
+##CONTIG=<ID=6,length=171115067>
+##CONTIG=<ID=7,length=159138663>
+##CONTIG=<ID=8,length=146364022>
+##CONTIG=<ID=9,length=141213431>
+##CONTIG=<ID=MT,length=16569>
+##CONTIG=<ID=X,length=155270560>
+##CONTIG=<ID=Y,length=59373566>
+1	866319	G	A	2	colon_cancer,lung_cancer=2
+1	866522	C	CCCCC	2	colon_cancer,lung_cancer=2
+1	870903	T	C	2	colon_cancer,lung_cancer=2
+1	884045	G	A	1	colon_cancer,lung_cancer=1
+1	887560	A	C	1	colon_cancer,lung_cancer=1
+2	271797	G	A	2	colon_cancer,lung_cancer=2
+2	272203	C	T	2	colon_cancer,lung_cancer=2
+2	276908	C	G	2	colon_cancer,lung_cancer=2
+2	510344	A	G	1	colon_cancer,lung_cancer=1
+2	672976	A	G	1	colon_cancer,lung_cancer=1
+3	112253207	A	AAA	1	colon_cancer,lung_cancer=1
+3	154890526	T	TT	1	colon_cancer,lung_cancer=1
+3	154890526	T	TTT	1	colon_cancer,lung_cancer=1

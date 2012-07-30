@@ -1,0 +1,5 @@
+WARNING: 2 new REF have been found and inserted into the database.
+ CHROM	POS	REF	ALT
+ 1	885045	A	G
+ 1	885045	G	A
+

@@ -1,0 +1,13 @@
+WARNING: 10 new REF have been found and inserted into the database.
+ CHROM	POS	REF	ALT
+ 1	811510	A	C
+ 1	811616	G	A
+ 1	884045	T	G
+ 1	897325	T	A
+ 1	949608	C	T
+ 1	1058978	A	T
+ 2	271797	A	C
+ 2	277535	G	A
+ 3	112253207	C	CC
+ 3	154890526	T	TTT
+
