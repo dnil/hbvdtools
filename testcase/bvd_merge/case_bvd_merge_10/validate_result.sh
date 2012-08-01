@@ -18,16 +18,32 @@ $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_merge_10_4.vcf -d $script
 
 $scriptdir/../../../bin/bvd-merge.pl -d $scriptdir/case_bvd_merge_10_DB_local $scriptdir/case_bvd_merge_10_DB_2 $scriptdir/case_bvd_merge_10_DB_1
 
+cp $scriptdir/result_template $scriptdir/expected_bvdb
+db_id="$( grep "^##DB_ID" $scriptdir/case_bvd_merge_10_DB_local/bvdb )"
+sed -i -e "s/^##DB_ID=.*/$db_id/g" $scriptdir/expected_bvdb
+
 result=$(diff $scriptdir/case_bvd_merge_10_DB_local/bvdb $scriptdir/expected_bvdb)
 if [ $? -ne 0 ]; then
 	echo "Something went wrong in the first part of case_bvd_merge_10 testing. See below "
 	echo "$result"
+        rm $scriptdir/case_bvd_merge_10_DB_local/*
+        rmdir $scriptdir/case_bvd_merge_10_DB_local/
+        rm $scriptdir/case_bvd_merge_10_DB_1/*
+        rmdir $scriptdir/case_bvd_merge_10_DB_1/
+        rm $scriptdir/case_bvd_merge_10_DB_2/*
+        rmdir $scriptdir/case_bvd_merge_10_DB_2/
 	exit 0
 fi
 result=$(diff $scriptdir/case_bvd_merge_10_DB_local/bvdb_chksum $scriptdir/expected_bvdb_chksum)
 if [ $? -ne 0 ]; then
 	echo "Something went wrong in the second part of case_bvd_merge_10 testing. See below "
 	echo "$result"
+        rm $scriptdir/case_bvd_merge_10_DB_local/*
+        rmdir $scriptdir/case_bvd_merge_10_DB_local/
+        rm $scriptdir/case_bvd_merge_10_DB_1/*
+        rmdir $scriptdir/case_bvd_merge_10_DB_1/
+        rm $scriptdir/case_bvd_merge_10_DB_2/*
+        rmdir $scriptdir/case_bvd_merge_10_DB_2/
 	exit 0
 fi
 echo "All case_bvd_merge_10 are correct !!! Congratz"

@@ -1,6 +1,7 @@
 ##NI=5
 ##ENTRIES=case_bvd_merge_12_1.vcf,case_bvd_merge_12_2.vcf,case_bvd_merge_12_3.vcf,case_bvd_merge_12_4.vcf,case_bvd_merge_12_5.vcf
 ##TAGS=colon_cancer,lung_cancer
+##DB_ID=d4bed912c2631343798406
 7	30062202	A	C	2	lung_cancer=2
 7	30062202	A	G	3	colon_cancer,lung_cancer=2
 7	30062325	T	C	1	.

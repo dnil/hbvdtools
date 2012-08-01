@@ -91,7 +91,6 @@ sub add_vcf_to_bvd
             $bvdb->set_contig_table(ID=>$contig_table->{$key}->{ID},length=>$contig_table->{$key}->{length});
         }
     }
-    #print $a[1],"\n";
     $bvdb->begin_add_tran(file=>$$opts{file}, total_samples=>$n_var_samples, tags=>$$opts{tags});
 
     my %fq = (

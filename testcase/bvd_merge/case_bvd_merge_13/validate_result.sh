@@ -24,6 +24,9 @@ $scriptdir/../../../bin/bvd-add.pl $scriptdir/SRR028815.var.flt.vcf -T lung_canc
 
 $scriptdir/../../../bin/bvd-merge.pl $scriptdir/case_bvd_merge_13_DB_4 $scriptdir/case_bvd_merge_13_DB_3/ $scriptdir/case_bvd_merge_13_DB_1 -d $scriptdir/case_bvd_merge_13_DB_merged/ $scriptdir/case_bvd_merge_13_DB_2 $scriptdir/case_bvd_merge_13_DB_5 
 
+db_id="$( grep "^##DB_ID" $scriptdir/../../../bin/DB/bvdb )"
+sed -i -e "s/^##DB_ID=.*/$db_id/g" $scriptdir/case_bvd_merge_13_DB_merged/bvdb
+
 result=$(diff $scriptdir/case_bvd_merge_13_DB_merged/bvdb $scriptdir/../../../bin/DB/bvdb)
 
 if [ $? -eq 0 ]; then

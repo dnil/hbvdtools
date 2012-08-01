@@ -12,7 +12,7 @@ $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_merge_09_5.vcf -d $script
 $scriptdir/../../../bin/bvd-add.pl $scriptdir/case_bvd_merge_09_1.vcf -d $scriptdir/case_bvd_merge_09_DB_2
 
 2>&1 $scriptdir/../../../bin/bvd-merge.pl $scriptdir/case_bvd_merge_09_DB_1 $scriptdir/case_bvd_merge_09_DB_2 -d $scriptdir/case_bvd_merge_09_DB_local | head -1 > $scriptdir/tmp.txt
-echo 'Some of the content from '$scriptdir'/case_bvd_merge_09_DB_2 are duplicated with some from other databases.' > $scriptdir/expected_result
+echo 'ERROR: Some of the content from '$scriptdir'/case_bvd_merge_09_DB_2 are duplicated with some from other databases.' > $scriptdir/expected_result
 
 result=$(diff $scriptdir/tmp.txt $scriptdir/expected_result)
 if [ $? -eq 0 ]; then

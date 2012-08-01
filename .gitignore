@@ -2,3 +2,17 @@
 src/
 .project
 bin/DB/
+*.log
+blib/
+Makefile
+pm_to_blib
+MYMETA.yml
+*.swp
+*#
+*.swo
+*.swn
+testcase/test_tools/
+testcase/bin/
+testcase/bvd_add/case_bvd_add_98/
+testcase/bvd_add/case_bvd_add_99/
+testcase/bvd_get/case_bvd_get_99/

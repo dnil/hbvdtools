@@ -31,7 +31,7 @@ use constant HEADER_ENTRIES     => 'ENTRIES';
 use constant HEADER_TAGS        => 'TAGS';
 use constant HEADER_DB_ID       => 'DB_ID';
 use constant HEADER_REFERENCE   => 'REFERENCE';
-use constant HEADER_CONTIG     => 'CONTIG';
+use constant HEADER_CONTIG      => 'CONTIG';
 
 use constant KEY_CONTIG_ID      => 'ID';
 use constant KEY_CONTIG_LENGTH  => 'length';
@@ -86,22 +86,33 @@ From a script:
 
 =cut
 
-#sub validate_bvdb
-#{
-#       my ($db_dir) = @_;
-#       
-#       if ( !$db_dir && @ARGV ) { $db_dir = $ARGV[0]; }
-#       
-#       #check if it has database file
-#       if (! -e $db_dir."/".DB_DB) { confess "$db_dir is invalid database directory : No database file.\n";    }       
-#       #check if it has chksum file
-#       if (! -e $db_dir."/".DB_CHKSUM) { confess "$db_dir is invalid database directory : No chksum file.\n";  }       
-#       return 1;
-#}
+sub validate_bvdb
+{
+    my ($db_dir) = @_;
+
+    if ( !$db_dir && @ARGV ) { $db_dir = $ARGV[0]; }
+
+    for my $key (keys %__buildver_configuration) {
+        ##check if it has database file
+        if ( -e $db_dir."/".$__buildver_configuration{$key}->{db_file_prefix} ) {
+            ##check if it has chksum file
+            if ( ! -e $db_dir."/".$__buildver_configuration{$key}->{db_file_prefix}.CHKSUM_FILE_SUFFIX ) {
+                confess "$db_dir is invalid database directory : No chksum file.\n";
+            };
+            return 1;
+        };
+    } 
+    confess "$db_dir is invalid database directory : No database file.\n";
+    #if (! -e $db_dir."/".DB_DB) { confess "$db_dir is invalid database directory : No database file.\n";    }       
+    #if (! -e $db_dir."/".DB_CHKSUM) { confess "$db_dir is invalid database directory : No chksum file.\n";  }       
+    return 1;
+}
 
 =head2 get_buildvers
 
-???????????????????????????????????????????????
+    About   : Get list of buildver supported by hbvdb-tools.
+    Args    : None.
+    Returns : List of buildver in array structure
 
 =cut
 
@@ -118,7 +129,9 @@ sub get_buildvers
 
 =head2 valid_buildver
 
-???????????????????????????????????????????????
+    About   : Check if the given buildver is support by hbvdb-tools.
+    Args    : buildver.
+    Returns : True if support and false otherwise
 
 =cut
 
@@ -137,7 +150,9 @@ sub valid_buildver
 
 =head2 get_default_buildver
 
-??????????????????????????????????????????????
+    About   : Get default buildver.
+    Args    : None
+    Returns : default buildver
 
 =cut
 
@@ -360,7 +375,13 @@ sub _init_tmp_db
 
 =head2 set_reference
 
-??????????????????????????????????????????????????????????????????????
+    About   : Set reference file name to buffer which will be used to check if it need to be update in the database later.
+    Usage   :  
+        my $bvdb = Bvdb->new();
+        $bvdb->load_header();
+        $bvdb->set_reference("human_glk_v37.fasta");
+        $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
+    Args    : reference file name.
 
 =cut
 
@@ -373,7 +394,13 @@ sub set_reference()
 
 =head2 set_reference
 
-??????????????????????????????????????????????????????????????????????
+    About   : Set contig table to buffer which will be used to update contig table in the database later.
+    Usage   :  
+        my $bvdb = Bvdb->new();
+        $bvdb->load_header();
+        $bvdb->set_contig_table(ID=>20,length=>123456789);
+        $bvdb->begin_add_tran(file=>'my.vcf', total_samples=>3, tags=>'colon_cancer,lung_cancer');
+    Args    : reference file name.
 
 =cut
 
@@ -768,8 +795,8 @@ sub next_data_hash
 
     my @db_tags_array = split(/:/, $record->{tags});
     my $tag_found;
-    my @excluded_tag_array = split(/,/, $excluded_tags);
     if ( $excluded_tags) {
+        my @excluded_tag_array = split(/,/, $excluded_tags);
         foreach my $db_tags (@db_tags_array) {
             my ($key, $value) = split(/=/, $db_tags);
             my @db_tag_array = split(/,/, $key);
@@ -856,7 +883,7 @@ sub merge_databases
         my $min_key = undef;
         my $key; 
         for my $bvdb (@bvdbs) {
-            $key = $$bvdb{last_line}->{key};
+            $key = $$bvdb{last_line}->{db_variant_key};
             if (! $key) {next;}
             if (! defined($min_key)) {
                 $chrom   = $$bvdb{last_line}->{CHROM};
@@ -883,7 +910,8 @@ sub merge_databases
             delete $hash_tags{$_};
         }
         for my $bvdb (@bvdbs) {
-            if ($$bvdb{last_line}->{key} ne $min_key) { next; }
+            if (! defined($$bvdb{last_line}->{db_variant_key} )) { next; }
+            if ($$bvdb{last_line}->{db_variant_key} ne $min_key) { next; }
             $total_fq += $$bvdb{last_line}->{total};
             if ($$bvdb{last_line}->{tags} ne '.') {
                 my @tags_array = split(/:/, $$bvdb{last_line}->{tags});
@@ -1040,7 +1068,7 @@ sub check_databases_duplicated
 
     #Read and check the content from the input databases
     for my $db_dir (@db_dirs) {
-        open my $chk_sum, "<", $db_dir."/".$$self{_bvdb_chksum_file}.CHKSUM_FILE_SUFFIX or die $!;
+        open my $chk_sum, "<", $db_dir."/".$__buildver_configuration{$$self{buildver}}->{db_file_prefix}.CHKSUM_FILE_SUFFIX or die $!;
         while( my $line = <$chk_sum>)  {
             chomp($line);
             if ( exists($has_chksum{$line})) {
