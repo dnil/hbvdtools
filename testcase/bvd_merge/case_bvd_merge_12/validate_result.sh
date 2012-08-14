@@ -47,6 +47,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "All case_bvd_merge_12 are correct !!! Congratz"
 
+rm $scriptdir/expected_bvdb
 rm $scriptdir/case_bvd_merge_12_DB_local/*
 rmdir $scriptdir/case_bvd_merge_12_DB_local/
 rm $scriptdir/case_bvd_merge_12_DB_1/*

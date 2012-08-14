@@ -22,6 +22,7 @@ else
     echo "$result"
 fi
 
+rm $scriptdir/expected_result
 rm $scriptdir/tmp.txt
 rm $scriptdir/case_bvd_merge_09_DB_local/*
 rmdir $scriptdir/case_bvd_merge_09_DB_local/

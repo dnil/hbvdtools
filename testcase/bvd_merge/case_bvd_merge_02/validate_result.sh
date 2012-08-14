@@ -13,4 +13,5 @@ else
     echo "$result"
 fi
 
+rm $scriptdir/expected_result
 rm $scriptdir/tmp.txt
