@@ -17,3 +17,5 @@ testcase/bvd_add/case_bvd_add_98/
 testcase/bvd_add/case_bvd_add_99/
 testcase/bvd_get/case_bvd_get_99/
 testcase/bvd_merge/case_bvd_merge_99/
+testcase/normalize_vcf/case_normalize_vcf_99/
+example/sample_DB/

@@ -8,6 +8,25 @@ To install this module, run the following commands:
 
 	sudo ./install.sh
 
+SAMPLE USAGE
+
+The sample command to add new variant frequency from the input in vcf format into the database
+
+	./bin/bvd-add.pl -d example/sample_DB example/sample_input.vcf
+
+The sample command to retrieve the variant frequency
+
+	./bin/bvd-get.pl -d example/sample_DB
+
+Please note that the database that was used in the above commands, 'example/sample_DB', is for tutorial purpose only.
+Practically, you can insert variant into the database by only
+
+	./bin/bvd-add.pl your_input.vcf
+
+and can retrieve the variant frequency by only
+
+	./bin/bvd-get.pl
+
 SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for this module with the
@@ -24,4 +43,3 @@ under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
-
