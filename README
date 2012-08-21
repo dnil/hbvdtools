@@ -29,10 +29,13 @@ and can retrieve the variant frequency by only
 
 SUPPORT AND DOCUMENTATION
 
-After installing, you can find documentation for this module with the
-perldoc command.
+After installing, you can find more information about this these tools in 
 
-    perldoc Bvdb
+	hbvdb-tools.pdf
+
+and you can find the library documentation at for this module by using perldoc command.
+
+	perldoc Bvdb
 
 LICENSE AND COPYRIGHT
 

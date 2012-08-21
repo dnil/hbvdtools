@@ -19,3 +19,4 @@ testcase/bvd_get/case_bvd_get_99/
 testcase/bvd_merge/case_bvd_merge_99/
 testcase/normalize_vcf/case_normalize_vcf_99/
 example/sample_DB/
+factory/
