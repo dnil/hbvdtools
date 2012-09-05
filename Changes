@@ -1,0 +1,9 @@
+Revision history for hbvdb-tools (Major changes only)
+
+0.01    March 01
+	First version
+
+1.1.1	August 01
+	bvd-get.pl can export the frequencies in vcf format.
+
+
