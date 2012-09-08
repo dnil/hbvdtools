@@ -95,7 +95,7 @@ sub output_avdb
             print "$variant->{CHROM} $variant->{POS} $len $variant->{REF} $variant->{ALT} $variant->{fq}\n";
         }
     }
-    $bvdb-close();
+    $bvdb->close();
 }
 
 sub output_vcf
