@@ -70,7 +70,7 @@ sub add_vcf_to_bvd
 {
     my ($opts) = @_;
 	
-    validate_tags();
+    organize_tags();
     
     #Open vcf file
     my $vcf = Vcf->new(file=>$$opts{file},region=>'1:1000-2000');
@@ -136,7 +136,7 @@ sub add_vcf_to_bvd
 }
 
 #Assuming that tags value is stored in $$opts{tags}
-sub validate_tags
+sub organize_tags
 {
 	my @array = split(/,/, $$opts{tags});
 	my %seen = ();
