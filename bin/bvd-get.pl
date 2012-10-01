@@ -129,7 +129,7 @@ sub output_vcf
     my @cols;
     $vcf_out->add_columns(@cols);
 
-    foreach my $key (sort keys $$bvdb{header}->{contig}) {
+    foreach my $key (sort keys %{$$bvdb{header}->{contig}}) {
 	$vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
     }
 
