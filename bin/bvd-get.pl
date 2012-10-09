@@ -129,7 +129,11 @@ sub output_vcf
     $vcf_out->add_columns(@cols);
 
     foreach my $key (sort keys %{$$bvdb{header}->{contig}}) {
+<<<<<<< HEAD
         $vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
+=======
+	$vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
+>>>>>>> 25c08aa611d002c6d9fc116427d6fd8e75b42b9e
     }
 
     if ($$bvdb{header}->{reference}) {
