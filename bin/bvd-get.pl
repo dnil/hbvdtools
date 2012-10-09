@@ -129,11 +129,7 @@ sub output_vcf
     $vcf_out->add_columns(@cols);
 
     foreach my $key (sort keys %{$$bvdb{header}->{contig}}) {
-<<<<<<< HEAD
         $vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
-=======
-	$vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
->>>>>>> 25c08aa611d002c6d9fc116427d6fd8e75b42b9e
     }
 
     if ($$bvdb{header}->{reference}) {
@@ -142,7 +138,7 @@ sub output_vcf
     print $vcf_out->format_header();
 
     while (my $variant = $bvdb->next_data_hash($$opts{tags})) {
-	if ($variant->{fq}) {
+	if (($variant->{fq}) && ($variant->{fq} != 0)) {
 	    my %out;
 	    my %info;
 
