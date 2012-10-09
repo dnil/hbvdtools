@@ -8,7 +8,6 @@ use strict;
 use Cwd 'abs_path';
 use File::Basename;
 
-#use lib dirname(abs_path($0))."/lib";
 use Bvdb;
 use Vcf;
 
@@ -100,9 +99,9 @@ sub output_avdb
 
     #Generate avdb output
     while (my $variant = $bvdb->next_data_hash($$opts{tags})) {
-	if ($variant->{fq}) {
+	if (($variant->{fq}) && ($variant->{fq} != 0)) {
 	    my $len = $variant->{POS}+length($variant->{REF})-1;
-	    print "$variant->{CHROM} $variant->{POS} $len $variant->{REF} $variant->{ALT} $variant->{fq}\n";
+	    print "$variant->{CHROM}\t$variant->{POS}\t$len\t$variant->{REF}\t$variant->{ALT}\t$variant->{fq}\n";
 	}
     }
     $bvdb->close();
@@ -129,8 +128,8 @@ sub output_vcf
     my @cols;
     $vcf_out->add_columns(@cols);
 
-    foreach my $key (sort keys $$bvdb{header}->{contig}) {
-	$vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
+    foreach my $key (sort keys %{$$bvdb{header}->{contig}}) {
+        $vcf_out->add_header_line({key=>'contig',ID=>$key,length=>$$bvdb{header}->{contig}->{$key}});
     }
 
     if ($$bvdb{header}->{reference}) {

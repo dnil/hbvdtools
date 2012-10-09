@@ -7,7 +7,6 @@ use strict;
 use Cwd 'abs_path';
 use File::Basename;
 
-#use lib dirname(abs_path($0))."/lib";
 use Bvdb;
 use Vcf;
 

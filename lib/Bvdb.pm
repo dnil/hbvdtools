@@ -815,7 +815,7 @@ sub next_data_hash
             }#end foreach my $db_tag (@db_tag_array)
         }#end foreach $db_tags (@db_tags_array)
     }#end if ( @excluded_tags)
-    $record->{fq} /= ($$self{header}->{total_samples}*2);
+    $record->{fq} = sprintf("%.4f", $record->{fq}/($$self{header}->{total_samples}*2));
     $$self{last_line} = $record;
     return $record;
 }
