@@ -58,7 +58,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.1.2';
 
 
 =head1 SYNOPSIS
@@ -541,8 +541,8 @@ sub _read_file_content
               $bvdb->close();
     Args    : CHROM        .. An identifier from the reference genome.
               POS          .. The reference position, with the 1st base having position 1.
-              REF          .. Reference base(s): Each base must be one of A,C,G,T,N. Bases should be in uppercase. 
-                              Multiple bases are permitted. The value in the pos field refers to the position of the first base in the string.
+              REF          .. Reference base(s): Each base must be one of A,C,G,T,N. Bases must be in uppercase. 
+                              Multiple bases are permitted. The value in the POS column refers to the position of the first base in the string.
               ALT          .. An alternate non-reference allele called on at least one of the samples.
               allele_count .. Number of allele count for this variant.  
 
@@ -553,42 +553,49 @@ sub add_variant
     my ($self, %args) = @_;
     my @tags_array;
     my $tags;
-    
+
     if ( !$$self{transactions}->{active} ) {$self->throw("'begin_tran' haven't been called.");}
-    
+
     #create key from args
     my $chromosome = (looks_like_number($args{CHROM}))? sprintf("%02d", $args{CHROM}):$args{CHROM};
-    my $args_variant_key   = $chromosome."|".sprintf("%012s",$args{POS})."|".$args{REF}."|".$args{ALT};
-    my $args_reference_key = $chromosome."|".sprintf("%012s",$args{POS})."|".$args{REF};
+    my $args_variant_key   = $chromosome."|".sprintf("%012s",$args{POS})."|".sprintf("% 12s",$args{REF})."|".$args{ALT};
+    my $args_reference_key = $chromosome."|".sprintf("%012s",$args{POS})."|".sprintf("% 12s",$args{REF});
+#    my $args_variant_key   = $chromosome."|".sprintf("%012s",$args{POS})."|".$args{REF}."|".$args{ALT};
+#    my $args_reference_key = $chromosome."|".sprintf("%012s",$args{POS})."|".$args{REF};
     my $args_position_key  = $chromosome."|".sprintf("%012s",$args{POS});
-    
 
-    #if the key in the database is smaller than the key in vcf file
+    #if the key in the database is smaller than the key in arguments
     while ( ($$self{current_variant}->{db_variant_key}) && 
             ($$self{current_variant}->{db_variant_key} lt $args_variant_key)
           ) {
         #Count new REF if any 
         $self->_count_new_REF(\%args, $args_reference_key, $args_position_key);
 
-        #Write the variant record to the temporary database
+        #Write the current variant record from the current database to the temporary database
         print {$$self{_tmp_db_fh}} "$$self{current_variant}->{CHROM}\t$$self{current_variant}->{POS}\t$$self{current_variant}->{REF}\t$$self{current_variant}->{ALT}\t$$self{current_variant}->{total}\t$$self{current_variant}->{tags}\n";
         $$self{current_variant} = $self->_next_record();
     }
-    
+
     if (defined $$self{current_variant}->{db_variant_key} ) {
         #if both key are equal
         if ( $$self{current_variant}->{db_variant_key} eq $args_variant_key) {
             my $result_tags;
             my $total = $$self{current_variant}->{total} + $args{allele_count};
+            #if the current transaction has no tags
             if (! $$self{transactions}->{vcf}->{tags}) {
-                            $result_tags = $$self{current_variant}->{tags}; 
+                #the tags value in the database will remain the same
+                $result_tags = $$self{current_variant}->{tags}; 
             } else {
+                #if there isn't any tags in the database
                 if ($$self{current_variant}->{tags} eq ".") {
+                    #new tags is simply just "<new tags>=<frequency count>
                     $result_tags = "$$self{transactions}->{vcf}->{tags}=$args{allele_count}";
                 } else {
+                    #merge tags in the database and from the transaction together
                     my @array = split(/:/, $$self{current_variant}->{tags});
                     my %hash;
-                            
+
+                    #iterate through all the existing tags in the database and see if the transaction tags can be merged
                     for (my $i=0; $i<=$#array; $i++) {
                         my ($tags, $count) = split(/=/, $array[$i]);
                         if ($tags eq $$self{transactions}->{vcf}->{tags}){
@@ -598,13 +605,14 @@ sub add_variant
                         } 
                         push (@tags_array, "$tags=$hash{$tags}");
                     }
+                    #if the transaction tags are really new
                     if ((!$hash{$$self{transactions}->{vcf}->{tags}}) && ($$self{transactions}->{vcf}->{tags})) {
                         push (@tags_array, "$$self{transactions}->{vcf}->{tags}=$args{allele_count}");
                     }
                     $result_tags = join(':', sort @tags_array);
                 }
             }
-            
+
             #Count new REF if any 
             $self->_count_new_REF(\%args, $args_reference_key, $args_position_key);
 
@@ -618,16 +626,17 @@ sub add_variant
     #Count new REF if any 
     $self->_count_new_REF(\%args, $args_reference_key, $args_position_key);
 
-    #Either it's the end of the database or it's a brand new database or it's just because the key in database is greater than that in vcf file
+    #Either it's the end of the database or it's a brand new database or it's just because the key in database is greater than that in arguments file
     #so the variants will be directly added to database.
     $tags = ($$self{transactions}->{vcf}->{tags})? "$$self{transactions}->{vcf}->{tags}=$args{allele_count}" : "."; 
+    #Write the current variant record from the arguments to the temporary database
     print {$$self{_tmp_db_fh}} "$args{CHROM}\t$args{POS}\t$args{REF}\t$args{ALT}\t$args{allele_count}\t$tags\n";
 }
 
 sub _count_new_REF
 {
     my ($self, $args_variant, $args_reference_key, $args_position_key) = @_;
-   
+
     no warnings 'uninitialized';
     #Count new REF
     if ($$self{current_variant}->{db_position_key} ne $$self{_check_new_REF}->{_last_db_position_key}) {
@@ -678,10 +687,10 @@ sub _next_record
     my $chromosome = (looks_like_number($array[0]))? sprintf("%02d", $array[0]):$array[0];
 
     #unique variant key - usually, the variant with this key should only appear once in the database and variant file.
-    my $db_variant_key = $chromosome."|".sprintf("%012s",$array[1])."|".$array[2]."|".$array[3];
+    my $db_variant_key = $chromosome."|".sprintf("%012s",$array[1])."|".sprintf("% 12s",$array[2])."|".$array[3];
 
     #unique reference key - this key can be used to implement multiallele record.
-    my $db_reference_key = $chromosome."|".sprintf("%012s",$array[1])."|".$array[2];
+    my $db_reference_key = $chromosome."|".sprintf("%012s",$array[1])."|".sprintf("% 12s",$array[2]);
 
     #unique position key - this key can be used to identify if it is likely to has more than 2 major version of reference in the database.
     my $db_position_key = $chromosome."|".sprintf("%012s",$array[1]);

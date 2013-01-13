@@ -39,7 +39,7 @@ sub error
         "      Arguments to control disk usage\n",
         "         -s, --savediskspace             Save disk space, i.e. no backup\n",
         "\n",
-        "Note: The input vcf file is in plain text format, not in compressed format (e.g. gzip), even though Vcf.pm was used here.\n",
+        "Note: The input vcf file is in plain text format, not in compressed format (e.g. gzip), even though Vcf.pm is used here.\n",
         "\n";
 
 }
@@ -70,9 +70,10 @@ sub add_vcf_to_bvd
     my ($opts) = @_;
 	
     organize_tags();
-    
+    my $sorted_vcf_file = sort_vcf($$opts{file});
+
     #Open vcf file
-    my $vcf = Vcf->new(file=>$$opts{file},region=>'1:1000-2000');
+    my $vcf = Vcf->new(file=>$sorted_vcf_file,region=>'1:1000-2000');
     $vcf->parse_header();
 
     my $n_var_samples = $#{$$vcf{columns}}-(FIX_COL)+1;
@@ -92,23 +93,27 @@ sub add_vcf_to_bvd
     }
     $bvdb->begin_add_tran(file=>$$opts{file}, total_samples=>$n_var_samples, tags=>$$opts{tags});
 
-    my %fq = (
-    );
+    my %fq           = ();
+    my %last_position = ();
+    $last_position{CHROM} = undef;
+    $last_position{POS}   = undef;
+    $last_position{REF}   = undef;
 	
-    #looping to add varaint info to database.	
-    while (my $x=$vcf->next_data_hash()) 
+    #looping through all variants in a VCF file
+    while (my $current_variant=$vcf->next_data_hash())
     {
+        #going through all samples in one variant and counting the present of each alternate alleles
         for (my $col=0; $col<$n_var_samples; $col++) {
-            my ($alleles,$seps,$is_phased,$is_empty) = $vcf->parse_haplotype($x, $$vcf{columns}->[$col+(FIX_COL)]);
+            my ($alleles,$seps,$is_phased,$is_empty) = $vcf->parse_haplotype($current_variant, $$vcf{columns}->[$col+(FIX_COL)]);
             if ($#$alleles > 0) {
-                if (($$alleles[0] ne $$x{REF}) && ($$alleles[0] ne ".")){
+                if (($$alleles[0] ne $$current_variant{REF}) && ($$alleles[0] ne ".")){
                     if (exists $fq{$$alleles[0]}) {
                         $fq{$$alleles[0]} += 1; 
                     } else {
                         $fq{$$alleles[0]} = 1; 
                     }
                 }
-                if (($$alleles[1] ne $$x{REF}) && ($$alleles[1] ne ".")){
+                if (($$alleles[1] ne $$current_variant{REF}) && ($$alleles[1] ne ".")){
                     if (exists $fq{$$alleles[1]}) {
                         $fq{$$alleles[1]} += 1; 
                     } else {
@@ -117,21 +122,60 @@ sub add_vcf_to_bvd
                 }
             }
         }
-		
-        for (sort keys %fq) {
-            if ($fq{$_} > 0) {
-                $bvdb->add_variant(CHROM=>$$x{CHROM}, POS=>$$x{POS}, REF=>$$x{REF}, ALT=>$_, allele_count=>$fq{$_} );
+
+        #if current variant is at the same position as the last one
+        if ( ($last_position{CHROM} eq $$current_variant{CHROM}) &&
+             ($last_position{POS} eq $$current_variant{POS})
+           ) {
+            #cache this varaint together with the last one
+            for my $alt (keys %fq) {
+                if ( defined($last_position{REFALT}{$$current_variant{REF}}{$alt})) {
+                    $last_position{REFALT}{$$current_variant{REF}}{$alt} += $fq{$alt}
+                } else {
+                    $last_position{REFALT}{$$current_variant{REF}}{$alt} = $fq{$alt}
+                }
+            }
+        } else {
+            if ( defined($last_position{CHROM})) {
+                #insert the variants from the last position into the database
+                for my $ref (sort keys %{$last_position{REFALT}}) {
+                    for my $alt (sort keys %{$last_position{REFALT}{$ref}}) {
+                        $bvdb->add_variant(CHROM=>$last_position{CHROM}, POS=>$last_position{POS}, REF=>$ref, ALT=>$alt, allele_count=>$last_position{REFALT}{$ref}{$alt} );
+                    }
+                }
+            }
+            #cache this variant
+            $last_position{CHROM}  = $$current_variant{CHROM};
+            $last_position{POS}    = $$current_variant{POS};
+            for my $ref (keys %{$last_position{REFALT}}) {
+                delete $last_position{REFALT}{$ref};
+            }
+            for my $alt (keys %fq) {
+                $last_position{REFALT}{$$current_variant{REF}}{$alt} = $fq{$alt};
             }
         }
-	
-        for (keys %fq) {
-            delete $fq{$_};
+		
+        for my $ref_alt (keys %fq) {
+            delete $fq{$ref_alt};
+        }
+    }
+
+    #insert the "last" variants from the last position into the database
+    if ( defined($last_position{CHROM})) {
+        for my $ref (sort keys %{$last_position{REFALT}}) {
+            for my $alt (sort keys %{$last_position{REFALT}{$ref}}) {
+                $bvdb->add_variant(CHROM=>$last_position{CHROM}, POS=>$last_position{POS}, REF=>$ref, ALT=>$alt, allele_count=>$last_position{REFALT}{$ref}{$alt} );
+            }
         }
     }
 	
     $bvdb->commit_add();
     $vcf->close();
     $bvdb->close();
+
+    if ( -e $sorted_vcf_file) {
+        unlink($sorted_vcf_file);
+    }
 }
 
 #Assuming that tags value is stored in $$opts{tags}
@@ -141,4 +185,36 @@ sub organize_tags
 	my %seen = ();
 	my @unique = grep { ! $seen{ $_ }++ } @array;
 	$$opts{tags} = join(',', sort @unique);
+}
+
+sub sort_vcf
+{
+    my ($vcf_file) = @_;
+
+    my $tmp_file = dirname(abs_path($0))."/tmp_vcf";
+    if ( -e $tmp_file) {
+        unlink($tmp_file);
+    }
+
+    open(my $fh,"< $vcf_file") or error("$vcf_file: $!");
+    open(my $sort_fh,"| sort -t'\t' -k1,1V -k2,2n >> $tmp_file");
+    open(my $header_fh," >> $tmp_file");
+
+    my $unflushed = select(STDOUT); 
+    $| = 1; 
+
+    while (my $line=<$fh>)
+    {
+        if ( $line=~/^#/ ) { print $header_fh $line; next; }
+        print $sort_fh $line;
+        last;
+    }
+    select($unflushed);
+    while (my $line=<$fh>)
+    {
+        print $sort_fh $line;
+    }
+
+    $| = 0;
+    return $tmp_file;
 }

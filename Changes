@@ -6,4 +6,7 @@ Revision history for hbvdb-tools (Major changes only)
 1.1.1	August 01
 	bvd-get.pl can export the frequencies in vcf format.
 
+1.1.2 January 13
+  Fix sorting issues
+
 
