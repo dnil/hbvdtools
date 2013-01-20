@@ -558,8 +558,8 @@ sub add_variant
 
     #create key from args
     my $chromosome = (looks_like_number($args{CHROM}))? sprintf("%02d", $args{CHROM}):$args{CHROM};
-    my $args_variant_key   = $chromosome."|".sprintf("%012s",$args{POS})."|".sprintf("% 12s",$args{REF})."|".$args{ALT};
-    my $args_reference_key = $chromosome."|".sprintf("%012s",$args{POS})."|".sprintf("% 12s",$args{REF});
+    my $args_variant_key   = $chromosome."|".sprintf("%012s",$args{POS})."|".sprintf("% 30s",$args{REF})."|".$args{ALT};
+    my $args_reference_key = $chromosome."|".sprintf("%012s",$args{POS})."|".sprintf("% 30s",$args{REF});
 #    my $args_variant_key   = $chromosome."|".sprintf("%012s",$args{POS})."|".$args{REF}."|".$args{ALT};
 #    my $args_reference_key = $chromosome."|".sprintf("%012s",$args{POS})."|".$args{REF};
     my $args_position_key  = $chromosome."|".sprintf("%012s",$args{POS});
@@ -687,10 +687,10 @@ sub _next_record
     my $chromosome = (looks_like_number($array[0]))? sprintf("%02d", $array[0]):$array[0];
 
     #unique variant key - usually, the variant with this key should only appear once in the database and variant file.
-    my $db_variant_key = $chromosome."|".sprintf("%012s",$array[1])."|".sprintf("% 12s",$array[2])."|".$array[3];
+    my $db_variant_key = $chromosome."|".sprintf("%012s",$array[1])."|".sprintf("% 30s",$array[2])."|".$array[3];
 
     #unique reference key - this key can be used to implement multiallele record.
-    my $db_reference_key = $chromosome."|".sprintf("%012s",$array[1])."|".sprintf("% 12s",$array[2]);
+    my $db_reference_key = $chromosome."|".sprintf("%012s",$array[1])."|".sprintf("% 30s",$array[2]);
 
     #unique position key - this key can be used to identify if it is likely to has more than 2 major version of reference in the database.
     my $db_position_key = $chromosome."|".sprintf("%012s",$array[1]);
